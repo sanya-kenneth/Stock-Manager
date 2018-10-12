@@ -1,4 +1,4 @@
-# Stock-Manager
+# Store-Manager
 Store Manager is a web application that helps store owners manage sales and product inventory records. This application is meant for use in a single store.
 
 # Getting Started
@@ -34,5 +34,3 @@ The pages are live on gh-pages
 
 # Acknowledgements
 Appreciation goes to the developers and facilitators at Andela who have given the author adequate support throughout the making of this project.
-
-
