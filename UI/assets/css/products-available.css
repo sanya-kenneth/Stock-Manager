@@ -60,6 +60,7 @@
     ol li a {
         color: rgb(73, 73, 73);
         margin-bottom: 10px;
+        text-decoration: none;
     }
     
     ol li a:hover {

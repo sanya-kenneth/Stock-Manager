@@ -1,0 +1,129 @@
+body {
+    margin: 0px;
+    background-image: url(../img/new.jpg);
+}
+
+.container {
+    background-color: white;
+    padding: 20px;
+    margin-right: 20%;
+    margin-left: 20%;
+}
+
+.inner-container {
+    margin-left: 50px;
+}
+
+@media (max-width:1030px) {
+    .container {
+        background-color: white;
+        padding: 20px;
+        margin-right: 10%;
+        margin-left: 10%;
+    }
+}
+
+@media (max-width:805px) {
+    .container {
+        background-color: white;
+        padding: 20px;
+        margin-right: 6%;
+        margin-left: 6%;
+    }
+}
+
+@media (max-width:705px) {
+    .container {
+        background-color: white;
+        padding: 0px;
+        margin-right: 0%;
+        margin-left: 0%;
+    }
+    td,
+    th {
+        padding: 0px;
+    }
+    .inner-container {
+        margin-left: 0px;
+    }
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+    opacity: .3em;
+}
+
+li {
+    float: left;
+}
+
+.a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.a:hover {
+    background-color: #0066CC;
+}
+
+.right {
+    float: right;
+}
+
+.username a {
+    color: rgb(199, 199, 199);
+}
+
+.username a:hover {
+    background-color: #333;
+    margin-top: 0px;
+}
+
+img {
+    height: 20px;
+    width: auto;
+    border-radius: 9px;
+}
+
+li a:hover {
+    background-color: #0066CC;
+    margin-top: 3px;
+}
+
+.sign-out a:hover {
+    background-color: rgb(46, 44, 44);
+}
+
+td {
+    text-align: center;
+    color: white;
+}
+
+th {
+    color: white;
+}
+
+tr:nth-child(odd) {
+    background-color: rgba(4, 62, 138, 0.842);
+}
+
+tr:nth-child(even) {
+    background-color: rgba(9, 114, 252, 0.952);
+}
+
+td,
+th {
+    padding: 8px 20px 8px 20px;
+}
+
+h2 {
+    color: rgb(3, 60, 107);
+    text-align: center;
+}

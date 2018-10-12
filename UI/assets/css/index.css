@@ -1,6 +1,6 @@
 .body {
     background-image: url(../img/back6.png);
-    background-size: 20%;
+    background-size: 25%;
     margin: 0px;
 }
 
@@ -139,4 +139,8 @@ p {
     font-size: 17px;
     margin: 2px 2px 2px 21px;
     color: grey;
+}
+
+.login_link {
+    text-decoration: none;
 }
