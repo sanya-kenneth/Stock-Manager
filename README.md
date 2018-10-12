@@ -12,14 +12,14 @@ All you need is a modern browser and a working internet connection.
  
 # Installing
 Clone the project into your repository using    
-- git clone https://github.com/sanya-kenneth/Store-Manager/tree/ft-UI
+- git clone : https://github.com/sanya-kenneth/Store-Manager/tree/ft-UI
 - Switch to the ft-UI branch
 - git checkout ft-UI
 
 
 # Deployment
 The pages are live on gh-pages
-- gh-pages link:  
+- gh-pages link :   https://sanya-kenneth.github.io/Store-Manager/UI/templates/
 
 
 
