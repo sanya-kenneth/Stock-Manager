@@ -119,3 +119,23 @@ p {
     padding-left: 5%;
     margin-bottom: 10px;
 }
+
+.fa-edit {
+    margin-left: 40px;
+    float: right;
+}
+
+.fa-trash-alt {
+    margin-left: 10px;
+    margin-right: 10px;
+    float: right;
+    color: rgb(211, 9, 87);
+}
+
+.fa-edit:hover {
+    color: #0066CC;
+}
+
+.fa-trash-alt:hover {
+    color: rgb(129, 8, 55);
+}
