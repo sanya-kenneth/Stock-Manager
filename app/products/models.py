@@ -11,7 +11,7 @@ class Product(object):
 
     def to_dict(self):
         return dict(
-            product_id = uuid.uuid1().int,
+            product_id = str(uuid.uuid4().int)[:5],
             product_name = self.product_name,
             product_quantity = self.product_quantity,
             product_price = self.product_price,
