@@ -48,7 +48,20 @@ def get_products():
 
 @product.route('/products/<product_id>', methods=['GET'])
 def get_product(product_id):
-    pass
+    if product_id == "":
+        abort(400)
+        
+    if len(product_db) <= 0:
+        abort(404)
+    
+    for product_item in product_db:
+        if product_item['product_id'] == product_id:
+            return jsonify({'result':product_item}),200
+            
+    abort(404)
+       
+
+    
 
 
 
