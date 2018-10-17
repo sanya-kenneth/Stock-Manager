@@ -29,12 +29,12 @@ def create_product():
     for product_item in product_db:
         if product_name == product_item['product_name'] and product_description == product_item['product_description'] and product_price == product_item['product_price']:
             product_item['product_quantity'] = product_item['product_quantity'] + product_quantity
-            return jsonify({'message':'Product Updated Successfully'})
+            return jsonify({'message':'Product Updated Successfully'}),201
 
     product = Product(product_name,product_quantity,product_price,product_description)
     product_db.append(product.to_dict())
 
-    return jsonify({'status':'Product created','result':product_db}),201
+    return jsonify({'status':'Product created'}),201
 
 @product.route('/products', methods=['GET'])
 def get_products():
@@ -43,7 +43,7 @@ def get_products():
 
     if len(product_db) <= 0:
         abort(404)
-    return jsonify({'Products-Available':product_db})
+    return jsonify({'Products-Available':product_db}),200
         
 
 @product.route('/products/<product_id>', methods=['GET'])
@@ -57,7 +57,7 @@ def get_product(product_id):
     for product_item in product_db:
         if product_item['product_id'] == product_id:
             return jsonify({'result':product_item}),200
-            
+
     abort(404)
        
 

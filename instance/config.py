@@ -7,9 +7,7 @@ class DevelopmentConfig(BaseConfig):
     """Development configuraion. Loads development configuration data when the app is in the development environment"""
     DEBUG = True
     TESTING = False
-    APPLICATION_ENVIRONMENT = 'development'
     
-
 class TestingConfig(BaseConfig):
     """Testing configuraion. Loads Test configuration data when the app is in the Test environment"""
     DEBUG = True
