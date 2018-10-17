@@ -3,3 +3,4 @@
 .vscode/
 /app/products/__pycache__
 /instance/__pycache__
+/app/auth/__pycache__

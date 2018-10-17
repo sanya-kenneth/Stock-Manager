@@ -1,5 +1,6 @@
 from flask import Flask
 from app.products.views import product
+from app.auth.views import auth
 from instance.config import app_config
 
 
@@ -11,5 +12,6 @@ def create_app(config_name):
 
     #Register Blueprints
     app.register_blueprint(product, url_prefix='/api/v1' )
+    app.register_blueprint(auth,url_prefix='/api/v1')
 
     return app
