@@ -13,6 +13,7 @@ sale_bp = Blueprint('sale_bp',__name__)
 
 sale_records = [] #List to store sale records for the app
 
+
 @sale_bp.route('/sales', methods=['POST'])
 @login_required
 def create_sale_order(current_user):
@@ -29,7 +30,7 @@ def create_sale_order(current_user):
         abort(400)
   
     for product_item in product_db:
-        if product_item['product_name'] != product_name:
+        if product_name != product_item['product_name']:
             abort(404)
 
         if product_item['product_quantity'] == 0 or product_quantity > product_item['product_quantity']:
@@ -43,5 +44,27 @@ def create_sale_order(current_user):
         return jsonify({'message':'Sale record created'}),201
     
 
+@sale_bp.route('/sales', methods=['GET'])
+def get_sales():
+
+    if len(sale_records) == 0:
+        abort(404)
+    
+    return jsonify({'result':sale_records,'status':'Success'})
+
+
+@sale_bp.route('/sales/<sale_id>', methods=['GET'])
+def get_sale(sale_id):
+    if sale_id == "":
+        abort(400)
+    
+    if len(sale_records) == 0:
+        abort(404)
+
+    for sale_made in sale_records:
+        if sale_id == sale_made['sale_id']:
+            return jsonify({'result':sale_made}),200
+            
+    abort(404)
     
 
