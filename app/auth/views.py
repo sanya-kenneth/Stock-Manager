@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify,make_response,abort,json
+from flask import Blueprint,request,jsonify,abort,json
 from .models import User,Admin
 from werkzeug.security import check_password_hash,generate_password_hash
 
@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash,generate_password_hash
 auth = Blueprint('auth',__name__)
 
 user_db = [] #List to hold user data
+
 
 
 @auth.route('/users', methods=['POST'])
@@ -30,6 +31,8 @@ def create_store_attendant():
             return jsonify({'message':'Account already exists'}),400
 
     usr_password = generate_password_hash(user_password, method='sha256')
+
+    #Initialise User object to add provided data
     store_attendant = User(user_name,usr_password)
     user_db.append(store_attendant.to_dict())
 
@@ -55,6 +58,8 @@ def create_admin():
             return jsonify({'message':'Account already exists'}),400
 
     adm_password = generate_password_hash(admin_password, method='sha256')
+    
+    #Initialise admin object to add provided data
     admin = Admin(admin_name,adm_password)
     user_db.append(admin.to_dict())
 
@@ -77,7 +82,6 @@ def login():
         if user['user_name'] == user_name and check_password_hash(password,user_password):
             user['loggedin'] = True
             return jsonify({'message':'You are now loggedin'}),200
-
     return jsonify({'error':'Wrong username or password'}),400
 
     

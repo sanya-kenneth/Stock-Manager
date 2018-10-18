@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify,make_response,abort,json
+from flask import Blueprint,request,jsonify,abort,json
 from .models import Product
 
 # create product blueprint
@@ -16,7 +16,7 @@ def create_product():
     data = json.loads(data)
     product_name = data['product_name']
     product_quantity = int(data['product_quantity'])
-    product_price = data['product_price']
+    product_price = int(data['product_price'])
     product_description = data['product_description']
 
     #check if content type is application/json
@@ -41,7 +41,7 @@ def get_products():
     if request.method != 'GET':
         abort(405)
 
-    if len(product_db) <= 0:
+    if len(product_db) == 0:
         abort(404)
     return jsonify({'Products-Available':product_db}),200
         
@@ -51,7 +51,7 @@ def get_product(product_id):
     if product_id == "":
         abort(400)
         
-    if len(product_db) <= 0:
+    if len(product_db) == 0:
         abort(404)
     
     for product_item in product_db:
