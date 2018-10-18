@@ -1,12 +1,12 @@
-class sale:
-    def __init__(self,attedt_id,attedt_name,product_name,product_quantity,product_price,Total,sale_date):
-        self.attedt_id = attedt_id
-        self.attedt_name = attedt_name
-        self.product_name = product_name
-        self.product_quantity = product_quantity
-        self.product_price = product_price
-        self.Total = Total
-        self.sale_date = sale_date
+class Sale:
+    def __init__(self,*args,**kwargs):
+        self.attedt_id = args[0]
+        self.attedt_name = args[1]
+        self.product_name = args[2]
+        self.product_quantity = args[3]
+        self.product_price = args[4]
+        self.Total = args[5]
+        self.sale_date = args[6]
 
     def to_dict(self):
         return dict(
