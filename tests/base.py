@@ -3,6 +3,7 @@ from app.auth.models import User,Admin
 from app.products.models import Product
 from app.sales.models import Sale
 from app.auth.views import user_db
+from app.products.views import product_db
 from  app import create_app
 # from flask import current_app
 import datetime
@@ -25,6 +26,7 @@ class BaseTest(unittest.TestCase):
 
     def tearDown(self):
         user_db.clear()
+        product_db.clear()
 
 
     

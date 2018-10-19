@@ -56,11 +56,10 @@ def create_product(current_user):
 @product.route('/products', methods=['GET'])
 @login_required
 def get_products(current_user):
-    if request.method != 'GET':
-        abort(405)
-
+    
     if len(product_db) == 0:
         abort(404)
+        
     return jsonify({'Products-Available':product_db}),200
         
 
