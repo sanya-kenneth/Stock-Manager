@@ -1,5 +1,8 @@
 from flask import Blueprint,request,jsonify,abort,json,make_response
 from .models import Product
+from ..auth.utility import login_required,admin_required
+from ..auth.views import user_db
+
 
 
 # create product blueprint
@@ -12,7 +15,8 @@ product_db = [] #List will hold all products created in the app
 
 
 @product.route('/products', methods=['POST'])
-def create_product():
+@login_required
+def create_product(current_user):
     data = request.data
     data = json.loads(data)
     product_name = data['product_name']
@@ -23,6 +27,9 @@ def create_product():
     #check if content type is application/json
     if not request.content_type == 'application/json': 
         return jsonify({'error':'Wrong content-type'}),400
+    
+    if admin_required() != True:
+        abort(401)
 
     if product_name == "" or product_quantity == "" or product_price == "" or product_description == "":
         abort(400)
@@ -38,7 +45,8 @@ def create_product():
     return jsonify({'status':'Product created'}),201
 
 @product.route('/products', methods=['GET'])
-def get_products():
+@login_required
+def get_products(current_user):
     if request.method != 'GET':
         abort(405)
 
@@ -49,6 +57,13 @@ def get_products():
 
 @product.route('/products/<product_id>', methods=['GET'])
 def get_product(product_id):
+    if len(user_db) == 0:
+        abort(401)
+
+    for user_dt in user_db:
+        if user_dt['loggedin'] != True:
+            return jsonify({'Error':'You are not logged in'}),401   
+
     if product_id == "":
         abort(400)
         
@@ -87,6 +102,11 @@ def unauthorised(error):
 def internal_server_error(error):
     """Function takes in HTTP error 500 and returns custom HTTP error 500 message """
     return make_response(jsonify({'Error':'Server run into some error'}))
+
+@product.app_errorhandler(403)
+def forbidden(error):
+    """Function takes in HTTP error 403 and returns custom HTTP error 403 message """
+    return make_response(jsonify({'Error':"You don't have the permission to access the requested resource"}))
 
     
 

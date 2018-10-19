@@ -3,7 +3,7 @@ import datetime
 from .models import Sale
 from ..products.views import product_db
 from ..auth.views import user_db
-from ..auth.utility import login_required
+from ..auth.utility import login_required,admin_required
 
 
 # create sales blueprint
@@ -20,15 +20,21 @@ def create_sale_order(current_user):
     data = request.data
     data = json.loads(data)
     product_name = data['product_name']
-    product_quantity = int(data['product_quantity'])
+    product_quantity = data['product_quantity']
 
     #check if content type is application/json
     if not request.content_type == 'application/json': 
         return jsonify({'error':'Wrong content-type'}),400
 
+    if admin_required() == True:
+        abort(401)
+
     if product_name == "" or product_quantity == "" or type(product_quantity) != int:
         abort(400)
-  
+
+    if len(product_db) == 0:
+        abort(404)
+
     for product_item in product_db:
         if product_name != product_item['product_name']:
             abort(404)
@@ -41,11 +47,15 @@ def create_sale_order(current_user):
         sale_records.append(sale_record.to_dict())
         new_quantity = product_item['product_quantity'] - product_quantity
         product_item['product_quantity'] = new_quantity
-        return jsonify({'message':'Sale record created'}),201
+
+        return jsonify({'message':'Sale record created','result':sale_records}),201
     
 
 @sale_bp.route('/sales', methods=['GET'])
-def get_sales():
+@login_required
+def get_sales(current_user):
+    if admin_required() != True:
+        abort(401)
 
     if len(sale_records) == 0:
         abort(404)
@@ -55,16 +65,29 @@ def get_sales():
 
 @sale_bp.route('/sales/<sale_id>', methods=['GET'])
 def get_sale(sale_id):
-    if sale_id == "":
-        abort(400)
-    
-    if len(sale_records) == 0:
-        abort(404)
+    if len(user_db) == 0:
+        abort(401)
+
+    for user_dt in user_db:
+        if user_dt['loggedin'] != True:
+            return jsonify({'Error':'You are not logged in'}),401  
+        else:
+            current_user = user_dt 
 
     for sale_made in sale_records:
-        if sale_id == sale_made['sale_id']:
-            return jsonify({'result':sale_made}),200
-            
-    abort(404)
+        if current_user['admin_status'] == True or current_user['user_id'] == sale_made['attedt_id']:
+            if sale_id == "":
+                abort(400)
+    
+            if len(sale_records) == 0:
+                abort(404)
+
+            for sale_made in sale_records:
+                if sale_id == sale_made['sale_id']:
+                    return jsonify({'result':sale_made}),200
+                else:
+                    abort(404)
+    
+    abort(401)
     
 
