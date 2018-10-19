@@ -3,7 +3,7 @@ from app.auth import views
 import json
 
 
-class AuthTestCase(BaseTest):
+class AuthTestCase(BaseTest):   
     def test_returns_error_if_request_content_type_is_not_application_json(self):
         """ Method checks if the create attendant and create admin endpoints return an error 
             if the request.content-type is not application/json """
@@ -70,6 +70,23 @@ class AuthTestCase(BaseTest):
                                                                                         admin_password = 'admin123')))
         self.assertEqual(res.status_code,201) 
 
+    def test_returns_error_if_user_tries_to_create_an_account_that_already_exists(self):
+        res = self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
+                                                                                        user_password = '23232')))
+        res = self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
+                                                                                        user_password = '23232')))
+        self.assertEqual(res.status_code,400)
+        self.assertIn('Account already exists',str(res.data))
+
+    def test_returns_error_admin_tries_to_create_an_existing_admin_account(self):
+        res = self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'admin',
+                                                                                        admin_password = 'admin123')))
+        res = self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'admin',
+                                                                                        admin_password = 'admin123')))
+        self.assertEqual(res.status_code,400)
+        self.assertIn('Account already exists',str(res.data))
+        
+        
     def test_login_returns_error_if_user_name_or_password_is_empty(self):
         """ Method tests if login endpoint returns an error if the username or password is empty"""
         res = self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = '',
@@ -101,9 +118,14 @@ class AuthTestCase(BaseTest):
 
     def test_login_signs_in_a_user(self):
         """ Method tests if login endpoint can signin a user"""
+        res = self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
+                                                                                        user_password = '23232')))
         res = self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
                                                                                         password = '23232')))
         self.assertEqual(res.status_code,200) 
+        
+
+
 
 
 
