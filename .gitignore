@@ -5,3 +5,4 @@
 /instance/__pycache__
 /app/auth/__pycache__
 /app/sales/__pycache__
+/tests/__pycache__
