@@ -20,8 +20,8 @@ def create_product(current_user):
     data = request.data
     data = json.loads(data)
     product_name = data['product_name']
-    product_quantity = int(data['product_quantity'])
-    product_price = int(data['product_price'])
+    product_quantity = data['product_quantity']
+    product_price = data['product_price']
     product_description = data['product_description']
 
     #check if content type is application/json
@@ -33,6 +33,15 @@ def create_product(current_user):
 
     if product_name == "" or product_quantity == "" or product_price == "" or product_description == "":
         abort(400)
+
+    if (' ' in product_name) == True:
+        abort(400)
+    
+    if type(product_price) != int or type(product_quantity) != int:
+        abort(400)
+
+    if product_price < 1 or product_quantity < 1:
+        return jsonify({'Error':'Price or quantity must be greater than 1'}),400
   
     for product_item in product_db:
         if product_name == product_item['product_name'] and product_description == product_item['product_description'] and product_price == product_item['product_price']:
