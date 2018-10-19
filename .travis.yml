@@ -1,0 +1,20 @@
+language: python
+python:
+  - "3.6"
+
+#Command to install dependencies
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+
+#Command to run tests
+script:
+  - nosetests --with-coverage
+  - coverage report
+
+after_success:
+  - coveralls
+
+
+
+  
