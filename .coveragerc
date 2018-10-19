@@ -9,7 +9,7 @@ omit =
     */__pycache__/*
     
     *.pyc
-    */home/travis
+    */home/travis/*
     */venv/*
     */app/__pycache__/*
     */app/.pytest_cache/*
