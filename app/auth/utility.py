@@ -22,12 +22,10 @@ def admin_required():
         if user_dt['admin_status'] == True:
             return True
 
-def validate_username(users_name):
-    if (' ' in users_name) == True:
-        return jsonify({'Error':'user name cannot contain a space'}),400
-    
-    elif type(users_name) != str:
-        abort(400)
+        else:
+            return False
+
+
 
 
 

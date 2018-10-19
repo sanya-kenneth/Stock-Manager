@@ -1,7 +1,9 @@
 from app.auth.models import User,Admin
 from app.products.models import Product
 from app.sales.models import Sale
-from tests import BaseTest
+from tests.base import BaseTest
+# from app.auth.utility import validate_username
+
 
 
 

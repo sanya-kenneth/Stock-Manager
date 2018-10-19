@@ -1,7 +1,7 @@
 from flask import Blueprint,request,jsonify,abort,json
 from .models import User,Admin
 from werkzeug.security import check_password_hash,generate_password_hash
-from .utility import validate_username
+
 
 
 
@@ -27,7 +27,11 @@ def create_store_attendant():
     if user_name == "" or user_password == "":
         abort(400)
 
-    validate_username(user_name)
+    if (' ' in user_name) == True:
+        return jsonify({'Error':'user name cannot contain a space'}),400
+    
+    elif type(user_name) != str:
+        abort(400)
 
     for user in user_db:
         if user['user_name'] == user_name or user['user_password'] == user_password:
@@ -56,7 +60,11 @@ def create_admin():
     if admin_name == "" or admin_password == "":
         abort(400)
 
-    validate_username(admin_name)
+    if (' ' in admin_name) == True:
+        return jsonify({'Error':'user name cannot contain a space'}),400
+    
+    elif type(admin_name) != str:
+        abort(400)
 
     for admin in user_db:
         if admin['user_name'] == admin_name or admin['user_password'] == admin_password:
@@ -82,7 +90,11 @@ def login():
     if user_name == "" or user_password == "":
         abort(400)
     
-    validate_username(user_name)
+    if (' ' in user_name) == True:
+        return jsonify({'Error':'user name cannot contain a space'}),400
+    
+    elif type(user_name) != str:
+        abort(400)
     
     for user in user_db:
         password = user['user_password']
