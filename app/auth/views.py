@@ -6,13 +6,13 @@ from werkzeug.security import check_password_hash,generate_password_hash
 
 # Users and authentication blueprint
 # blueprint will handle all app user routes
-auth = Blueprint('auth',__name__)
+auths = Blueprint('auths',__name__)
 
 user_db = [] #List to hold user data
 
 
 
-@auth.route('/users', methods=['POST'])
+@auths.route('/users', methods=['POST'])
 def create_store_attendant():
     data = request.data
     data = json.loads(data)
@@ -39,7 +39,7 @@ def create_store_attendant():
     return jsonify({'message':'Account was successfuly created'}),201
 
 
-@auth.route('users/admin', methods=['POST'])  
+@auths.route('users/admin', methods=['POST'])  
 def create_admin():
     data = request.data
     data = json.loads(data)
@@ -66,8 +66,8 @@ def create_admin():
     return jsonify({'message':'Account was successfuly created'}),201
 
 
-@auth.route('/users/login',methods=['POST'])
-@auth.route('/users/login/admin',methods=['POST'])
+@auths.route('/users/login',methods=['POST'])
+@auths.route('/users/login/admin',methods=['POST'])
 def login():
     data = request.data
     data = json.loads(data)
