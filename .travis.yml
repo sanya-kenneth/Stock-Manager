@@ -9,7 +9,7 @@ install:
 
 #Command to run tests
 script:
-  - nosetests --with-coverage --cover-app
+  - nosetests --with-coverage --cover-tests
   - coverage report
 
 after_success:
