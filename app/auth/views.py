@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify,abort,json
+from flask import Blueprint,request,jsonify,abort,json,make_response
 from .models import User,Admin
 from werkzeug.security import check_password_hash,generate_password_hash
 
@@ -100,6 +100,13 @@ def login():
             user['loggedin'] = True
             return jsonify({'message':'You are now loggedin'}),200
     return jsonify({'error':'Wrong username or password'}),400
+
+
+
+@auths.app_errorhandler(400)
+def bad_request(error):
+    """ 400 status_code error handler """
+    return make_response(jsonify({'Stop':':( BAD REQUEST'}),400)
 
 
 

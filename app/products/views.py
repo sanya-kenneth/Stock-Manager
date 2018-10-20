@@ -82,20 +82,7 @@ def not_found(error):
     """Function takes in HTTP error 404 and returns custom HTTP error 404 message """
     return make_response(jsonify({'error':':( Oops Nothing found'}),404)
 
-@product.app_errorhandler(405)
-def method_not_allowed(error):
-    """HTTP error 405 handler """
-    return make_response(jsonify({'Error':':( Oops Your trying to use a wrong HTTP Method'}),405)
 
-@product.app_errorhandler(400)
-def bad_request(error):
-    """ 400 status_code error handler """
-    return make_response(jsonify({'Stop':':( BAD REQUEST'}),400)
-
-@product.app_errorhandler(401)    
-def unauthorised(error):
-    """ Returns custom 401 error message """
-    return make_response(jsonify({'Oops':'You are not allowed to access this resource'}),401)
 
 
 

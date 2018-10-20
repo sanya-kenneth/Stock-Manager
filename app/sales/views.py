@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify,abort,json
+from flask import Blueprint,request,jsonify,abort,json,make_response
 import datetime
 from .models import Sale
 from ..products.views import product_db
@@ -84,5 +84,10 @@ def get_sale(current_user,sale_id):
                     abort(404)
     
     abort(401)
+
+@sale_bp.app_errorhandler(401)    
+def unauthorised(error):
+    """ Returns custom 401 error message """
+    return make_response(jsonify({'Oops':'You are not allowed to access this resource'}),401)
     
 
