@@ -14,7 +14,6 @@ install:
 #Command to run tests
 script:
   - nosetests --with-coverage --cover-tests
-  - python3 -pytest -v --cov app --cov-report
   - coverage report
 
 after_success:
