@@ -84,28 +84,22 @@ def not_found(error):
 
 @product.app_errorhandler(405)
 def method_not_allowed(error):
-    """Function takes in HTTP error 405 and returns custom HTTP error 405 message """
+    """HTTP error 405 handler """
     return make_response(jsonify({'Error':':( Oops Your trying to use a wrong HTTP Method'}),405)
 
 @product.app_errorhandler(400)
 def bad_request(error):
-    """Function takes in HTTP error 400 and returns custom HTTP error 400 message """
+    """ 400 status_code error handler """
     return make_response(jsonify({'Error':':( BAD REQUEST'}),400)
 
 @product.app_errorhandler(401)    
 def unauthorised(error):
-    """Function takes in HTTP error 401 and returns custom HTTP error 401 message """
+    """ Returns custom 401 error message """
     return make_response(jsonify({'Error':'You are not allowed to access this resource'}),401)
 
-@product.app_errorhandler(500)
-def internal_server_error(error):
-    """Function takes in HTTP error 500 and returns custom HTTP error 500 message """
-    return make_response(jsonify({'Error':'Server run into some error'}))
 
-@product.app_errorhandler(403)
-def forbidden(error):
-    """Function takes in HTTP error 403 and returns custom HTTP error 403 message """
-    return make_response(jsonify({'Error':"You don't have the permission to access the requested resource"}))
+
+
 
     
 
