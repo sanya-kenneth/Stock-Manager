@@ -1,6 +1,6 @@
 from tests.base import BaseTest
 import json
-from app.products import views
+from app.products import views 
 from app.products.views import product_db
 from app.auth import views
 
@@ -167,6 +167,36 @@ class ProductTestCase(BaseTest):
 
         res = self.app.get('/api/v1/products')
         self.assertEqual(res.status_code,200) 
+
+    def test_returns_error_if_there_are_no_products_in_db(self):
+        res = self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'sanya',
+                                                                                        admin_password = '23232')))
+        res = self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
+                                                                                        password = '23232')))
+
+        res = self.app.get('/api/v1/products/1')
+        self.assertEqual(res.status_code,404) 
+
+    def test_returns_error_if_product_ids_dont_match(self):
+        res = self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'sanya',
+                                                                                        admin_password = '23232')))
+        res = self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
+                                                                                        password = '23232')))
+        product_db.append(dict(product_name = 'soap',product_quantity= 10,product_price = 2000,product_description = 'good soap',product_id = 1))
+
+        res = self.app.get('/api/v1/products/2')
+        self.assertEqual(res.status_code,404) 
+
+    def test_returns_product_if_ids_match(self):
+        res = self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'sanya',
+                                                                                        admin_password = '23232')))
+        res = self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
+                                                                                        password = '23232')))
+        product_db.append(dict(product_name = 'soap',product_quantity= 10,product_price = 2000,product_description = 'good soap',product_id = 1))
+
+        res = self.app.get('/api/v1/products/1')
+        self.assertEqual(res.status_code,404) 
+
 
 
         

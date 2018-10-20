@@ -59,22 +59,13 @@ def get_products(current_user):
     
     if len(product_db) == 0:
         abort(404)
-        
+
     return jsonify({'Products-Available':product_db}),200
         
 
 @product.route('/products/<product_id>', methods=['GET'])
-def get_product(product_id):
-    if len(user_db) == 0:
-        abort(401)
-
-    for user_dt in user_db:
-        if user_dt['loggedin'] != True:
-            return jsonify({'Error':'You are not logged in'}),401   
-
-    if product_id == "":
-        abort(400)
-        
+@login_required
+def get_product(current_user,product_id):   
     if len(product_db) == 0:
         abort(404)
     
