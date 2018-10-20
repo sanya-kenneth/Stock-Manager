@@ -20,7 +20,7 @@ Store Manager is a web application that helps store owners manage sales and prod
 
 ## Getting Started
 
-Clone the project from this [link]()
+Clone the project from this [link](https://github.com/sanya-kenneth/Store-Manager/tree/ft-API)
 
 ## Prerequisites
 
@@ -34,6 +34,7 @@ Clone the project from this [link]()
 ## Installing
 
 Clone the project using this link => 
+https://github.com/sanya-kenneth/Store-Manager
 
 Open your terminal or command prompt for windows users
 
