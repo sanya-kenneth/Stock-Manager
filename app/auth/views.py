@@ -48,10 +48,9 @@ def create_store_attendant():
 
 @auths.route('users/admin', methods=['POST'])  
 def create_admin():
-    data = request.data
-    data = json.loads(data)
-    admin_name = data['admin_name']
-    admin_password = str(data['admin_password'])
+    admin_details = json.loads(request.data)
+    admin_name = admin_details['admin_name']
+    admin_password = str(admin_details['admin_password'])
 
      #check if content type is application/json
     if not request.content_type == 'application/json': 
@@ -82,10 +81,10 @@ def create_admin():
 @auths.route('/users/login',methods=['POST'])
 @auths.route('/users/login/admin',methods=['POST'])
 def login():
-    data = request.data
-    data = json.loads(data)
-    user_name = data['name']
-    user_password = str(data['password'])
+    user_info = request.data
+    login_info = json.loads(user_info)
+    user_name = login_info['name']
+    user_password = str(login_info['password'])
 
     if user_name == "" or user_password == "":
         abort(400)
