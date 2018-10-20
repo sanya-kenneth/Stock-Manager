@@ -80,7 +80,7 @@ def get_product(current_user,product_id):
 @product.app_errorhandler(404)
 def not_found(error):
     """Function takes in HTTP error 404 and returns custom HTTP error 404 message """
-    return make_response(jsonify({'Error':':( Oops Nothing found'}),404)
+    return make_response(jsonify({'error':':( Oops Nothing found'}),404)
 
 @product.app_errorhandler(405)
 def method_not_allowed(error):
@@ -90,12 +90,12 @@ def method_not_allowed(error):
 @product.app_errorhandler(400)
 def bad_request(error):
     """ 400 status_code error handler """
-    return make_response(jsonify({'Error':':( BAD REQUEST'}),400)
+    return make_response(jsonify({'Stop':':( BAD REQUEST'}),400)
 
 @product.app_errorhandler(401)    
 def unauthorised(error):
     """ Returns custom 401 error message """
-    return make_response(jsonify({'Error':'You are not allowed to access this resource'}),401)
+    return make_response(jsonify({'Oops':'You are not allowed to access this resource'}),401)
 
 
 

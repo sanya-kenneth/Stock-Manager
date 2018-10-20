@@ -12,6 +12,11 @@ auths = Blueprint('auths',__name__)
 user_db = [] #List to hold user data
 
 
+def check_user(name,pwd):
+    for fetch_user in user_db:
+        if fetch_user['user_name'] == name or fetch_user['user_password'] == pwd:
+            abort(400)
+
 
 @auths.route('/users', methods=['POST'])
 def create_store_attendant():
@@ -32,11 +37,8 @@ def create_store_attendant():
 
     if (' ' in user_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
-    
-    for user in user_db:
-        if user['user_name'] == user_name or user['user_password'] == user_password:
-            return jsonify({'message':'Account already exists'}),400
 
+    check_user(user_name,user_password)
     usr_password = generate_password_hash(user_password, method='sha256')
 
     #Initialise User object to add provided data
@@ -65,10 +67,7 @@ def create_admin():
     if (' ' in admin_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
 
-    for admin in user_db:
-        if admin['user_name'] == admin_name or admin['user_password'] == admin_password:
-            return jsonify({'message':'Account already exists'}),400
-
+    check_user(admin_name, admin_password)
     adm_password = generate_password_hash(admin_password, method='sha256')
     
     #Initialise admin object to add provided data
@@ -101,6 +100,9 @@ def login():
             user['loggedin'] = True
             return jsonify({'message':'You are now loggedin'}),200
     return jsonify({'error':'Wrong username or password'}),400
+
+
+
 
     
         

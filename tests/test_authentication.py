@@ -76,15 +76,15 @@ class AuthTestCase(BaseTest):
         res = self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
                                                                                         user_password = '23232')))
         self.assertEqual(res.status_code,400)
-        self.assertIn('Account already exists',str(res.data))
+        self.assertIn(':( BAD REQUEST',str(res.data))
 
     def test_returns_error_admin_tries_to_create_an_existing_admin_account(self):
-        res = self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'admin',
+        self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'admin',
                                                                                         admin_password = 'admin123')))
         res = self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'admin',
                                                                                         admin_password = 'admin123')))
         self.assertEqual(res.status_code,400)
-        self.assertIn('Account already exists',str(res.data))
+        self.assertIn(':( BAD REQUEST',str(res.data))
         
         
     def test_login_returns_error_if_user_name_or_password_is_empty(self):

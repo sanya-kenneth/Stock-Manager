@@ -67,16 +67,8 @@ def get_sales(current_user):
 
 
 @sale_bp.route('/sales/<sale_id>', methods=['GET'])
-def get_sale(sale_id):
-    if len(user_db) == 0:
-        abort(401)
-
-    for user_dt in user_db:
-        if user_dt['loggedin'] != True:
-            return jsonify({'Error':'You are not logged in'}),401  
-        else:
-            current_user = user_dt 
-
+@login_required
+def get_sale(current_user,sale_id):
     for sale_made in sale_records:
         if current_user['admin_status'] == True or current_user['user_id'] == sale_made['attedt_id']:
             if sale_id == "":
