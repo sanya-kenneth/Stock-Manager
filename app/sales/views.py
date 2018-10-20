@@ -29,11 +29,8 @@ def create_sale_order(current_user):
     if admin_required() == True:
         abort(401)
 
-    if product_name == "" or product_quantity == "" or type(product_quantity) != int or (' ' in product_name) == True:
+    if product_name == "" or product_quantity == "" or type(product_quantity) != int or product_quantity < 1 or (' ' in product_name) == True:
         abort(400)
-
-    if product_quantity < 1:
-        return jsonify({'Error':'Price or quantity must be greater than 1'}),400
   
     if len(product_db) == 0:
         abort(404)

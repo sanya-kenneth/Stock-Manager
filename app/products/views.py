@@ -33,15 +33,12 @@ def create_product(current_user):
 
     if product_name == "" or product_quantity == "" or product_price == "" or product_description == "":
         abort(400)
-
-    if (' ' in product_name) == True:
+    
+    if type(product_price) != int or type(product_quantity) != int or product_price < 1 or product_quantity < 1:
         abort(400)
     
-    if type(product_price) != int or type(product_quantity) != int:
+    if (' ' in product_name) == True:
         abort(400)
-
-    if product_price < 1 or product_quantity < 1:
-        return jsonify({'Error':'Price or quantity must be greater than 1'}),400
   
     for product_item in product_db:
         if product_name == product_item['product_name'] and product_description == product_item['product_description'] and product_price == product_item['product_price']:
