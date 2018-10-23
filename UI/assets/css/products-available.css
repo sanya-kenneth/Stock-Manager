@@ -105,3 +105,9 @@
     h2 {
         color: rgb(8, 69, 119);
     }
+    
+    .logout {
+        width: auto;
+        height: 23px;
+        border-radius: 0px !important;
+    }
