@@ -71,11 +71,6 @@ def get_product(product_id):
     abort(404)
        
 
-#Custom error handlers
-@product.app_errorhandler(404)
-def not_found(error):
-    """Function takes in HTTP error 404 and returns custom HTTP error 404 message """
-    return make_response(jsonify({'error':':( Oops Nothing found'}),404)
 
 
 

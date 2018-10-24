@@ -87,9 +87,5 @@ def get_sale(sale_id):
     
     return jsonify({'error':'Sale record doesnot exist'}),404
 
-@sale_bp.app_errorhandler(401)    
-def unauthorised(error):
-    """ Returns custom 401 error message """
-    return make_response(jsonify({'Oops':'You are not allowed to access this resource'}),401)
     
 

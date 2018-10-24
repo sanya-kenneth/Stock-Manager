@@ -126,10 +126,6 @@ def log_admin():
 
 
 
-@auths.app_errorhandler(400)
-def bad_request(error):
-    """ 400 status_code error handler """
-    return make_response(jsonify({'Stop':':( BAD REQUEST'}),400)
 
 
 
