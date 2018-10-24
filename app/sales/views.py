@@ -2,8 +2,8 @@ from flask import Blueprint,request,jsonify,abort,json,make_response
 import datetime
 from .models import Sale
 from ..products.views import product_db
-from ..auth.views import user_db
-from ..auth.utility import login_required,admin_required
+from ..auth.views import user_db,admin_db
+from ..auth.utility import login_required,admin_required,login_admin_required
 
 
 # create sales blueprint
@@ -26,8 +26,8 @@ def create_sale_order(current_user):
     if not request.content_type == 'application/json': 
         return jsonify({'error':'Wrong content-type'}),400
 
-    if admin_required() == True:
-        abort(401)
+    # if admin_required() == True:
+    #     abort(401)
 
     if product_name == "" or product_quantity == "" or type(product_quantity) != int or product_quantity < 1 or (' ' in product_name) == True:
         abort(400)
@@ -52,7 +52,7 @@ def create_sale_order(current_user):
     
 
 @sale_bp.route('/sales', methods=['GET'])
-@login_required
+@login_admin_required
 def get_sales(current_user):
     if admin_required() != True:
         abort(401)
@@ -64,23 +64,28 @@ def get_sales(current_user):
 
 
 @sale_bp.route('/sales/<sale_id>', methods=['GET'])
-@login_required
-def get_sale(current_user,sale_id):
+def get_sale(sale_id):
+    for admin in admin_db:
+        admin_satus = admin['admin_status']
+
+    for user in user_db:
+        current_user_id = user['user_id']
+
     for sale_made in sale_records:
-        if current_user['admin_status'] == True or current_user['user_id'] == sale_made['attedt_id']:
-            if sale_id == "":
-                abort(400)
+        if admin_satus == True or current_user_id == sale_made['attedt_id']:
+            # if sale_id == "":
+            #     abort(400)
     
             if len(sale_records) == 0:
-                abort(404)
+                return jsonify({'error':'No sale made yet'}),404
 
             for sale_made in sale_records:
                 if sale_id == sale_made['sale_id']:
                     return jsonify({'result':sale_made}),200
                 else:
-                    abort(404)
+                    return jsonify({'error':'Sale record doesnot exist'}),404
     
-    abort(401)
+    return jsonify({'error':'Sale record doesnot exist'}),404
 
 @sale_bp.app_errorhandler(401)    
 def unauthorised(error):

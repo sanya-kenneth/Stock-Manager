@@ -1,4 +1,4 @@
-from .views import user_db
+from .views import user_db,admin_db
 from functools import wraps
 from flask import jsonify,abort
 
@@ -10,16 +10,31 @@ def login_required(function):
         if len(user_db) == 0:
             abort(401)
         for user_dt in user_db:
-            if user_dt['loggedin'] != True:
-                return jsonify({'Error':'You are not logged in'}),401    
-            else:
-                current_user = user_dt             
+                if user_dt['loggedin'] != True:
+                    return jsonify({'Error':'You are not logged in'}),401 
+                else:
+                    current_user = user_dt            
         return function(current_user,*args,**kwargs)
     return decorate
 
+def login_admin_required(f):
+    @wraps(f)
+    def decorated(*args,**kwargs):
+        if len(admin_db) == 0:
+            abort(401)
+        for admin in admin_db:
+            if admin['loggedin'] != True:
+                return jsonify({'Error':'You are not logged in'}),401 
+            else:
+                current_admin = admin 
+        return f(current_admin,*args,**kwargs)
+    return decorated
+
+        
+
 def admin_required():
-    for user_dt in user_db:
-        if user_dt['admin_status'] == True:
+    for admin_dt in admin_db:
+        if admin_dt['admin_status'] == True:
             return True
 
         else:
