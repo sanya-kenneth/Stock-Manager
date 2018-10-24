@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify,abort,json,make_response
+from flask import Blueprint,request,jsonify,json
 from .models import Product
 from ..auth.utility import login_required,admin_required,login_admin_required
 from ..auth.views import user_db
@@ -29,16 +29,16 @@ def create_product(current_user):
         return jsonify({'error':'Wrong content-type'}),400
     
     if admin_required() != True:
-        abort(401)
+        return jsonify({'error':'You are not allowed to access this resource'}),400
 
     if product_name == "" or product_quantity == "" or product_price == "" or product_description == "":
-        abort(400)
+        return jsonify({'error':'One of the required fields is empty'}),400
     
     if type(product_price) != int or type(product_quantity) != int or product_price < 1 or product_quantity < 1:
-        abort(400)
+        return jsonify({'error':'price or quantity must be a number and must be greater than 1'}),400
     
     if (' ' in product_name) == True:
-        abort(400)
+        return jsonify({'error':'poduct cannot contain spaces'}),400
   
     for product_item in product_db:
         if product_name == product_item['product_name'] and product_description == product_item['product_description'] and product_price == product_item['product_price']:
@@ -54,7 +54,7 @@ def create_product(current_user):
 def get_products():
     
     if len(product_db) == 0:
-        abort(404)
+        return jsonify({'error':'There no products at the moment'}),404
 
     return jsonify({'Products-Available':product_db}),200
         
@@ -62,13 +62,13 @@ def get_products():
 @product.route('/products/<product_id>', methods=['GET'])
 def get_product(product_id):   
     if len(product_db) == 0:
-        abort(404)
+        return jsonify({'error':'There no products at the moment'}),404
     
     for product_item in product_db:
         if product_item['product_id'] == product_id:
             return jsonify({'result':product_item}),200
 
-    abort(404)
+    return jsonify({'error':'Product not found'}),404 
        
 
 

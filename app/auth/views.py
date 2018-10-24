@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify,abort,json,make_response
+from flask import Blueprint,request,jsonify,json
 from .models import User,Admin
 from werkzeug.security import check_password_hash,generate_password_hash
 
@@ -15,8 +15,9 @@ admin_db = [] #List to hold admin data
 
 def check_user(name,pwd):
     for fetch_user in user_db:
-        if fetch_user['user_name'] == name or fetch_user['user_password'] == pwd:
-            abort(400)
+        for fetch_admin in admin_db:
+            if fetch_user['user_name'] == name or fetch_admin['user_name'] == name or fetch_user['user_password'] == pwd or fetch_admin['user_password'] == pwd:
+                return jsonify({'error':'user already exists'}),400
 
 
 @auths.route('/users', methods=['POST'])
@@ -31,10 +32,10 @@ def create_store_attendant():
         return jsonify({'error':'Wrong content-type'}),400
 
     if user_name == "" or user_password == "":
-        abort(400)
+        return jsonify({'error':'username or password cannot be empty'}),400
 
     if type(user_name) != str:
-        abort(400)
+        return jsonify({'error':'username must be a string'}),400
 
     if (' ' in user_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
@@ -63,7 +64,7 @@ def create_admin():
         return jsonify({'error':'username or password cannot be empty'}),400
 
     if type(admin_name) != str:
-        abort(400)
+        return jsonify({'error':'username must be a string'}),400
 
     if (' ' in admin_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
@@ -86,10 +87,10 @@ def login():
     user_password = str(login_info['password'])
 
     if user_name == "" or user_password == "":
-        abort(400)
+        return jsonify({'error':'username or password cannot be empty'}),400
     
     if type(user_name) != str:
-        abort(400)
+        return jsonify({'error':'username must be a string'}),400
     
     if (' ' in user_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
@@ -112,7 +113,7 @@ def log_admin():
         return jsonify({'error':'username or password cannot be empty'}),400
     
     if type(admin_user_name) != str:
-        abort(400)
+        return jsonify({'error':'username must be a string'}),400
     
     if (' ' in admin_user_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
