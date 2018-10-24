@@ -36,7 +36,6 @@ def admin_required():
     for admin_dt in admin_db:
         if admin_dt['admin_status'] == True:
             return True
-
         else:
             return False
 

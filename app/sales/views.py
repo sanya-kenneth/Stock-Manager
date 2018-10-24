@@ -21,30 +21,23 @@ def create_sale_order(current_user):
     data = json.loads(data)
     product_name = data['product_name']
     product_quantity = data['product_quantity']
-
     #check if content type is application/json
     if not request.content_type == 'application/json': 
         return jsonify({'error':'Wrong content-type'}),400
-
-    if product_name == "" or product_quantity == "" or type(product_quantity) != int or product_quantity < 1 or (' ' in product_name) == True:
-        return jsonify({'error':'required field cannot be empty'}),400
-  
+    if product_name == "" or product_quantity == "" or not isinstance(product_quantity,int) or product_quantity < 1 or (' ' in product_name) == True:
+        return jsonify({'error':'required field has invalid data'}),400
     if len(product_db) == 0:
         return jsonify({'error':'There no products yet'}),404
-
     for product_item in product_db:
         if product_name != product_item['product_name']:
             return jsonify({'error':'Product not found'}),404
-
         if product_item['product_quantity'] == 0 or product_quantity > product_item['product_quantity']:
             return jsonify({'error':'Sorry product is out of stock'}),400
-
         Total = int(product_item['product_price']) * product_quantity
         sale_record = Sale(current_user['user_id'],current_user['user_name'],product_name,product_quantity,product_item['product_price'],Total,datetime.datetime.utcnow())
         sale_records.append(sale_record.to_dict())
         new_quantity = product_item['product_quantity'] - product_quantity
         product_item['product_quantity'] = new_quantity
-
         return jsonify({'message':'Sale record created','result':sale_records}),201
     
 
@@ -53,10 +46,8 @@ def create_sale_order(current_user):
 def get_sales(current_user):
     if admin_required() != True:
         return jsonify({'error':'You are not allowed to access this resource'}),401
-
     if len(sale_records) == 0:
         return jsonify({'error':'No sales made yet'}),404
-    
     return jsonify({'result':sale_records,'status':'Success'}),200
 
 
@@ -64,21 +55,17 @@ def get_sales(current_user):
 def get_sale(sale_id):
     for admin in admin_db:
         admin_satus = admin['admin_status']
-
     for user in user_db:
         current_user_id = user['user_id']
-
     for sale_made in sale_records:
         if admin_satus == True or current_user_id == sale_made['attedt_id']:
             if len(sale_records) == 0:
                 return jsonify({'error':'No sales made yet'}),404
-
             for sale_made in sale_records:
                 if sale_id == sale_made['sale_id']:
                     return jsonify({'result':sale_made}),200
                 else:
                     return jsonify({'error':'Sale record doesnot exist'}),404
-    
     return jsonify({'error':'Sale record doesnot exist'}),404
 
     

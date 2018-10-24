@@ -26,27 +26,20 @@ def create_store_attendant():
     data = json.loads(data)
     user_name = data['user_name']
     user_password = str(data['user_password'])
-
     #check if content type is application/json
     if not request.content_type == 'application/json': 
         return jsonify({'error':'Wrong content-type'}),400
-
     if user_name == "" or user_password == "":
         return jsonify({'error':'username or password cannot be empty'}),400
-
     if type(user_name) != str:
         return jsonify({'error':'username must be a string'}),400
-
     if (' ' in user_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
-
     check_user(user_name,user_password)
     usr_password = generate_password_hash(user_password, method='sha256')
-
     #Initialise User object to add provided data
     store_attendant = User(user_name,usr_password)
     user_db.append(store_attendant.to_dict())
-
     return jsonify({'message':'Account was successfuly created'}),201
 
 
@@ -55,27 +48,20 @@ def create_admin():
     admin_details = json.loads(request.data)
     admin_name = admin_details['admin_name']
     admin_password = str(admin_details['admin_password'])
-
     #check if content type is application/json
     if not request.content_type == 'application/json': 
         return jsonify({'error':'Wrong content-type'}),400
-
     if not admin_name or not admin_password:
         return jsonify({'error':'username or password cannot be empty'}),400
-
     if type(admin_name) != str:
         return jsonify({'error':'username must be a string'}),400
-
     if (' ' in admin_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
-
     check_user(admin_name, admin_password)
     adm_password = generate_password_hash(admin_password, method='sha256')
-    
     #Initialise admin object to add provided data
     admin = Admin(admin_name,adm_password)
     admin_db.append(admin.to_dict())
-
     return jsonify({'message':'Account was successfuly created'}),201
 
 
@@ -85,16 +71,12 @@ def login():
     login_info = json.loads(user_info)
     user_name = login_info['name']
     user_password = str(login_info['password'])
-
     if user_name == "" or user_password == "":
         return jsonify({'error':'username or password cannot be empty'}),400
-    
-    if type(user_name) != str:
+    if not isinstance(user_name, str):
         return jsonify({'error':'username must be a string'}),400
-    
     if (' ' in user_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
-    
     for user in user_db:
         password = user['user_password']
         if user['user_name'] == user_name and check_password_hash(password,user_password):
@@ -108,16 +90,12 @@ def log_admin():
     sign_data = json.loads(admin_data)
     admin_user_name = sign_data['name']
     admin_user_password = str(sign_data['password'])
-
     if not admin_user_name or not admin_user_password:
         return jsonify({'error':'username or password cannot be empty'}),400
-    
-    if type(admin_user_name) != str:
+    if not isinstance(admin_user_name,str):
         return jsonify({'error':'username must be a string'}),400
-    
     if (' ' in admin_user_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
-    
     for user in admin_db:
         password = user['user_password']
         if user['user_name'] == admin_user_name  and check_password_hash(password,admin_user_password):
