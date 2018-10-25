@@ -1,6 +1,7 @@
 from flask import Blueprint,request,jsonify,json
 from .models import Product
-from ..auth.utility import login_required,admin_required,login_admin_required
+from ..auth.utility import admin_required,login_admin_required
+from app.auth.views import admin_db,user_db
 
 
 
@@ -10,8 +11,6 @@ from ..auth.utility import login_required,admin_required,login_admin_required
 product = Blueprint('product',__name__)
 
 product_db = [] #List will hold all products created in the app
-
-
 
 
 @product.route('/products', methods=['POST'])
@@ -35,45 +34,29 @@ def create_product(current_user):
     if (' ' in product_name) == True:
         return jsonify({'error':'poduct cannot contain spaces'}),400
     for product_item in product_db:
-        if product_name == product_item['product_name'] and product_description == product_item['product_description'] and product_price == product_item['product_price']:
+        if product_name == product_item['product_name'] and product_description == product_item['product_description']\
+        and product_price == product_item['product_price']:
             product_item['product_quantity'] = product_item['product_quantity'] + product_quantity
             return jsonify({'message':'Product Updated Successfully'}),201
-
     product = Product(product_name,product_quantity,product_price,product_description)
     product_db.append(product.to_dict())
-
     return jsonify({'status':'Product created'}),201
 
 @product.route('/products', methods=['GET'])
 def get_products():
+    if len(admin_db) == 0 and len(user_db) == 0:
+        return jsonify({'error':'login first'}),401
     if len(product_db) == 0:
         return jsonify({'error':'There no products at the moment'}),404
     return jsonify({'Products-Available':product_db}),200
 
 @product.route('/products/<product_id>', methods=['GET'])
-def get_product(product_id):   
+def get_product(product_id): 
+    if len(admin_db) == 0 and len(user_db) == 0:
+        return jsonify({'error':'login first'}),401  
     if len(product_db) == 0:
         return jsonify({'error':'There no products at the moment'}),404
     for product_item in product_db:
         if product_item['product_id'] == product_id:
             return jsonify({'result':product_item}),200
     return jsonify({'error':'Product not found'}),404 
-       
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-

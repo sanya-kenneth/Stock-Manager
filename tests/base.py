@@ -16,8 +16,7 @@ class BaseTest(unittest.TestCase):
         This method helps setup tests.
         It also initialises the test_client where tests will be run 
         """
-        config_name = "Testing"
-        self.app = create_app(config_name)
+        self.app = create_app("Testing")
         self.app = self.app.test_client()
         self.user = User('ken','123')
         self.admin = Admin('sanya','2018')

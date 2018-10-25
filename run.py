@@ -2,8 +2,8 @@ from app import create_app
 
 
 
-config_name = "Development"
-app = create_app(config_name)
+
+app = create_app("Development")
 
 if __name__ == '__main__':
     app.run()

@@ -13,13 +13,6 @@ user_db = [] #List to hold user data
 admin_db = [] #List to hold admin data
 
 
-def check_user(name,pwd):
-    for fetch_user in user_db:
-        for fetch_admin in admin_db:
-            if fetch_user['user_name'] == name or fetch_admin['user_name'] == name or fetch_user['user_password'] == pwd or fetch_admin['user_password'] == pwd:
-                return jsonify({'error':'user already exists'}),400
-
-
 @auths.route('/users', methods=['POST'])
 def create_store_attendant():
     data = request.data
@@ -31,11 +24,14 @@ def create_store_attendant():
         return jsonify({'error':'Wrong content-type'}),400
     if user_name == "" or user_password == "":
         return jsonify({'error':'username or password cannot be empty'}),400
-    if type(user_name) != str:
+    if not isinstance(user_name,str):
         return jsonify({'error':'username must be a string'}),400
     if (' ' in user_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
-    check_user(user_name,user_password)
+    # check_user(user_name,user_password)
+    for fetch_user in user_db:
+        if fetch_user['user_password'] == user_password or fetch_user['user_name'] == user_name:
+            return jsonify({'error':'user already exists'}),400
     usr_password = generate_password_hash(user_password, method='sha256')
     #Initialise User object to add provided data
     store_attendant = User(user_name,usr_password)
@@ -53,11 +49,14 @@ def create_admin():
         return jsonify({'error':'Wrong content-type'}),400
     if not admin_name or not admin_password:
         return jsonify({'error':'username or password cannot be empty'}),400
-    if type(admin_name) != str:
+    if not isinstance(admin_name,str):
         return jsonify({'error':'username must be a string'}),400
     if (' ' in admin_name) == True:
         return jsonify({'Error':'user name cannot contain a space'}),400
-    check_user(admin_name, admin_password)
+    # check_user(admin_name, admin_password)
+    for get_admin in admin_db:
+        if admin_name == get_admin['user_name']:
+            return jsonify({'error':'Admin exists'}),400
     adm_password = generate_password_hash(admin_password, method='sha256')
     #Initialise admin object to add provided data
     admin = Admin(admin_name,adm_password)
@@ -71,7 +70,7 @@ def login():
     login_info = json.loads(user_info)
     user_name = login_info['name']
     user_password = str(login_info['password'])
-    if user_name == "" or user_password == "":
+    if not user_name or not user_password:
         return jsonify({'error':'username or password cannot be empty'}),400
     if not isinstance(user_name, str):
         return jsonify({'error':'username must be a string'}),400
@@ -102,13 +101,3 @@ def log_admin():
             user['loggedin'] = True
             return jsonify({'message':'You are now loggedin'}),200
     return jsonify({'error':'Wrong username or password'}),400
-
-
-
-
-
-
-
-    
-        
-

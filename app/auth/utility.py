@@ -1,6 +1,6 @@
 from .views import user_db,admin_db
 from functools import wraps
-from flask import jsonify,abort
+from flask import jsonify
 
 
 
@@ -8,7 +8,7 @@ def login_required(function):
     @wraps(function)
     def decorate(*args,**kwargs):
         if len(user_db) == 0:
-            abort(401)
+            return jsonify({'error':'Login first'}),401
         for user_dt in user_db:
                 if user_dt['loggedin'] != True:
                     return jsonify({'Error':'You are not logged in'}),401 
@@ -21,7 +21,7 @@ def login_admin_required(f):
     @wraps(f)
     def decorated(*args,**kwargs):
         if len(admin_db) == 0:
-            abort(401)
+            return jsonify({'error':'Sorry you must be an admin to access this resource'}),401
         for admin in admin_db:
             if admin['loggedin'] != True:
                 return jsonify({'Error':'You are not logged in'}),401 
@@ -38,8 +38,3 @@ def admin_required():
             return True
         else:
             return False
-
-
-
-
-
