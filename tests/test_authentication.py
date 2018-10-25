@@ -71,12 +71,12 @@ class AuthTestCase(BaseTest):
         self.assertEqual(res.status_code,201) 
 
     def test_returns_error_if_user_tries_to_create_an_account_that_already_exists(self):
-        res = self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
+        self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
                                                                                         user_password = '23232')))
         res = self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
                                                                                         user_password = '23232')))
         self.assertEqual(res.status_code,400)
-        self.assertIn(':( BAD REQUEST',str(res.data))
+        self.assertIn('user already exists',str(res.data))
 
     def test_returns_error_admin_tries_to_create_an_existing_admin_account(self):
         self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'admin',
@@ -84,7 +84,7 @@ class AuthTestCase(BaseTest):
         res = self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'admin',
                                                                                         admin_password = 'admin123')))
         self.assertEqual(res.status_code,400)
-        self.assertIn(':( BAD REQUEST',str(res.data))
+        self.assertIn('Admin exists',str(res.data))
         
         
     def test_login_returns_error_if_user_name_or_password_is_empty(self):
@@ -118,7 +118,7 @@ class AuthTestCase(BaseTest):
 
     def test_login_signs_in_a_user(self):
         """ Method tests if login endpoint can signin a user"""
-        res = self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
+        self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
                                                                                         user_password = '23232')))
         res = self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
                                                                                         password = '23232')))

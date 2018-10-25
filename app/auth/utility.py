@@ -23,10 +23,9 @@ def login_admin_required(f):
         if len(admin_db) == 0:
             return jsonify({'error':'Sorry you must be an admin to access this resource'}),401
         for admin in admin_db:
-            if admin['loggedin'] != True:
+            if admin['loggedin'] == False:
                 return jsonify({'Error':'You are not logged in'}),401 
-            else:
-                current_admin = admin 
+            current_admin = admin 
         return f(current_admin,*args,**kwargs)
     return decorated
 

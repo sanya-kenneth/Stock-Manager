@@ -1,6 +1,6 @@
 from tests.base import BaseTest
 from app.auth.utility import login_required,admin_required
-from app.products import views
+from app.sales.views import *
 from app.auth.views import user_db,admin_db
 
 
@@ -15,10 +15,15 @@ class AppUtilityTests(BaseTest):
                 admin_status = False,
                 loggedin = False
                         ))
+        product = {
+                    'product_name':'soap',
+                    'product_quantity':2
+                  }
 
-        res = self.app.get('/api/v1/products')
-        self.assertEqual(res.status_code,401)
+        res = self.app.post('/api/v1/sales',content_type = 'application/json', data = json.dumps(product))
         self.assertIn('You are not logged in',str(res.data))
+        self.assertEqual(res.status_code,401)
+       
 
     def test_admin_required_rejects_user_if_user_is_not_an_admin(self):
         """ Methods tests if the admin_required function denies a user access to an endpoint if they are not an admin"""
