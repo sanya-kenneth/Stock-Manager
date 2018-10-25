@@ -17,6 +17,12 @@ sale_records = [] #List to store sale records for the app
 @sale_bp.route('/sales', methods=['POST'])
 @login_required
 def create_sale_order(current_user):
+    """
+    Function creates a sale order given that the product name matches
+    with what is in the system 
+
+    :params current_user:
+    """
     data = request.data
     data = json.loads(data)
     product_name = data['product_name']
@@ -46,6 +52,11 @@ def create_sale_order(current_user):
 @sale_bp.route('/sales', methods=['GET'])
 @login_admin_required
 def get_sales(current_user):
+    """
+    Function retrieves all sale records from the database
+
+    :params current_user:
+    """
     if admin_required() != True:
         return jsonify({'error':'You are not allowed to access this resource'}),401
     if len(sale_records) == 0:
@@ -55,6 +66,10 @@ def get_sales(current_user):
 
 @sale_bp.route('/sales/<sale_id>', methods=['GET'])
 def get_sale(sale_id):
+    """
+    Function retrieves a sale given the input sale_id matches with
+    a sale id of one of the sale records in the database
+    """
     if len(admin_db) == 0 and len(user_db) == 0:
         return jsonify({'error':'login first'}),401   
     for sold in sale_records:

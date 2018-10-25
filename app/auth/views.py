@@ -15,6 +15,11 @@ admin_db = [] #List to hold admin data
 
 @auths.route('/users', methods=['POST'])
 def create_store_attendant():
+    """
+    Function adds a store attendant to the system given that the data input is valid
+    If data input is not valid function will return a customise error message
+
+    """
     data = request.data
     data = json.loads(data)
     user_name = data['user_name']
@@ -41,6 +46,11 @@ def create_store_attendant():
 
 @auths.route('users/admin', methods=['POST'])  
 def create_admin():
+    """
+    Function creates an admin account given that the data input is valid
+    If data input is not valid function will return a customise error message
+
+    """
     admin_details = json.loads(request.data)
     admin_name = admin_details['admin_name']
     admin_password = str(admin_details['admin_password'])
@@ -66,6 +76,10 @@ def create_admin():
 
 @auths.route('/users/login',methods=['POST'])
 def login():
+    """
+    Function to login a store attendant into the system
+    if the store attendant account doesnot exist, an error is returned
+    """
     user_info = request.data
     login_info = json.loads(user_info)
     user_name = login_info['name']
@@ -85,6 +99,11 @@ def login():
 
 @auths.route('/users/login/admin',methods=['POST'])
 def log_admin():
+    """
+    Function to login an admin into the system
+    if the store attendant account doesnot exist, an error is returned
+
+    """
     admin_data = request.data
     sign_data = json.loads(admin_data)
     admin_user_name = sign_data['name']

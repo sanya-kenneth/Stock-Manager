@@ -1,4 +1,4 @@
-from flask import Blueprint,request,jsonify,json
+from flask import Blueprint,request,jsonify,json,make_response
 from .models import Product
 from ..auth.utility import admin_required,login_admin_required
 from app.auth.views import admin_db,user_db
@@ -16,6 +16,12 @@ product_db = [] #List will hold all products created in the app
 @product.route('/products', methods=['POST'])
 @login_admin_required
 def create_product(current_user):
+    """
+    Function Adds a product to database given that the data input is valid
+    If data input is not valid function will return a customise error message
+
+    :params current_user:
+    """
     data = request.data
     data = json.loads(data)
     product_name = data['product_name']
@@ -44,6 +50,10 @@ def create_product(current_user):
 
 @product.route('/products', methods=['GET'])
 def get_products():
+    """
+    Function returns products from the database
+    If the database is empty, function will return a customised error
+    """
     if len(admin_db) == 0 and len(user_db) == 0:
         return jsonify({'error':'login first'}),401
     if len(product_db) == 0:
@@ -52,6 +62,10 @@ def get_products():
 
 @product.route('/products/<product_id>', methods=['GET'])
 def get_product(product_id): 
+    """
+    Function returns a specific product filtered by a product id
+    :params product_id:
+    """
     if len(admin_db) == 0 and len(user_db) == 0:
         return jsonify({'error':'login first'}),401  
     if len(product_db) == 0:
@@ -60,3 +74,11 @@ def get_product(product_id):
         if product_item['product_id'] == product_id:
             return jsonify({'result':product_item}),200
     return jsonify({'error':'Product not found'}),404 
+
+#custom error handler
+@product.app_errorhandler(404)
+def not_found(error):
+    """ Customise HTTP 404 Not found error to return custom message
+        when ever an HTTP error 404 is raised.
+    """
+    return make_response(jsonify({'error':' :( Oops nothing here'})),404

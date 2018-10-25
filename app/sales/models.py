@@ -1,6 +1,11 @@
 import uuid
 
 class Sale:
+    """
+    Class for creating the sale object
+
+    :params  attedt_id, attedt_name, product_name, product_quantity, product_price, Total, sale_date:
+    """
     def __init__(self,*args,**kwargs):
         self.sale_id = uuid.uuid4()
         self.attedt_id = args[0]
@@ -12,6 +17,10 @@ class Sale:
         self.sale_date = args[6]
 
     def to_dict(self):
+        """
+        Method converts the Sale class instance variables 
+        to a dictionary and returns them
+        """
         return dict(
                 sale_id = str(self.sale_id.int)[:5],
                 attedt_id = self.attedt_id,
