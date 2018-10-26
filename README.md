@@ -76,8 +76,8 @@ Run the tests
 | `POST /api/v1/sales` | Create a sale order |
 | `POST /api/v1/users` | Create a store attendant account |
 | `POST /api/v1/users/admin` | Create admin account |
-| `POST /api/v1/users/login` | Login store attendant or admin |
-
+| `POST /api/v1/users/login` | Login store attendant |
+| `POST /api/v1/users/login/admin` | Login admin |
 ## Built With
 
  Python 3.6
