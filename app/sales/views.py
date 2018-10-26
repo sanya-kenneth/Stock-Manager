@@ -23,29 +23,31 @@ def create_sale_order(current_user):
 
     :params current_user:
     """
-    data = request.data
-    data = json.loads(data)
-    product_name = data['product_name']
-    product_quantity = data['product_quantity']
-    #check if content type is application/json
-    if not request.content_type == 'application/json': 
-        return jsonify({'error':'Wrong content-type'}),400
-    if product_name == "" or product_quantity == "" or not isinstance(product_quantity,int) or product_quantity < 1 or (' ' in product_name) == True:
-        return jsonify({'error':'required field has invalid data'}),400
-    if len(product_db) == 0:
-        return jsonify({'error':'There no products yet'}),404
-    for prodt in product_db:
-        print(prodt)
-        if prodt['product_name'] == product_name:
-            if prodt['product_quantity'] == 0 or product_quantity > prodt['product_quantity']:
-                return jsonify({'error':'Sorry product is out of stock'}),400
-            Total = int(prodt['product_price']) * product_quantity
-            sale_record = Sale(current_user['user_id'],current_user['user_name'],product_name,\
-            product_quantity,prodt['product_price'],Total,datetime.datetime.utcnow())
-            sale_records.append(sale_record.to_dict())
-            new_quantity = prodt['product_quantity'] - product_quantity
-            prodt['product_quantity'] = new_quantity
-            return jsonify({'message':'Sale record created','result':sale_records}),201
+    try:
+        data = request.data
+        data = json.loads(data)
+        product_name = data['product_name']
+        product_quantity = data['product_quantity']
+        #check if content type is application/json
+        if not request.content_type == 'application/json': 
+            return jsonify({'error':'Wrong content-type'}),400
+        if not product_name or not product_quantity or not isinstance(product_quantity,int) or product_quantity < 1 or (' ' in product_name) == True:
+            return jsonify({'error':'required field has invalid data'}),400
+        if len(product_db) == 0:
+            return jsonify({'error':'There no products yet'}),404
+        for prodt in product_db:
+            if prodt['product_name'] == product_name:
+                if prodt['product_quantity'] == 0 or product_quantity > prodt['product_quantity']:
+                    return jsonify({'error':'Sorry product is out of stock'}),400
+                Total = int(prodt['product_price']) * product_quantity
+                sale_record = Sale(current_user['user_id'],current_user['user_name'],product_name,\
+                product_quantity,prodt['product_price'],Total,datetime.datetime.utcnow())
+                sale_records.append(sale_record.to_dict())
+                new_quantity = prodt['product_quantity'] - product_quantity
+                prodt['product_quantity'] = new_quantity
+                return jsonify({'message':'Sale record created','result':sale_records}),201
+    except Exception:
+        return jsonify({'error':'required field/s missing'}), 400            
     return jsonify({'error':'Product not found'}),404
     
         
