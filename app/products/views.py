@@ -14,7 +14,6 @@ product_db = [] #List will hold all products created in the app
 
 
 @product.route('/products', methods=['POST'])
-@login_admin_required
 def create_product(current_user):
     """
     Function Adds a product to database given that the data input is valid

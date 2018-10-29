@@ -1,20 +1,15 @@
-import uuid
-
-
-
 #Store attendant class model
 class User(object):
-    def __init__(self,username,password,admin_status=False):
+    def __init__(self,username,email,password,admin_status=False):
         """
         Class for creating the store attendant object
 
-        :params user_name, user_password:
+        :params user_name, email, user_password:
         """
-        self.user_id = uuid.uuid1()
         self.username = username
+        self.email = email
         self.password = password
         self.admin_status = admin_status
-        self.loggedin = False
 
     def to_dict(self):
         """
@@ -22,12 +17,11 @@ class User(object):
         to a dictionary and returns them
         """
         return dict(
-                user_id = str(self.user_id.int)[:5],
                 user_name = self.username,
+                user_email = self.email,
                 user_password = self.password,
                 admin_status = self.admin_status,
-                loggedin = self.loggedin
-        )
+                )
 
 #Admin/Owner class model
 class Admin(User):
@@ -36,13 +30,13 @@ class Admin(User):
     Inherits from the User class
     sets admin_status instance variable to True
 
-    :params admin_name, admin_password:
+    :params admin_name, email, admin_password:
     """
     def __init__(self,*args,**kwargs):
         super().__init__(self,*args,**kwargs)
-        self.user_id = uuid.uuid4()
         self.username = args[0]
-        self.password = args[1]
+        self.email = args[1]
+        self.password = args[2]
         self.admin_status = True
 
 

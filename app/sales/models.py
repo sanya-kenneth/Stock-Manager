@@ -1,4 +1,3 @@
-import uuid
 
 class Sale:
     """
@@ -7,7 +6,6 @@ class Sale:
     :params  attedt_id, attedt_name, product_name, product_quantity, product_price, Total, sale_date:
     """
     def __init__(self,*args,**kwargs):
-        self.sale_id = uuid.uuid4()
         self.attedt_id = args[0]
         self.attedt_name = args[1]
         self.product_name = args[2]
@@ -22,7 +20,6 @@ class Sale:
         to a dictionary and returns them
         """
         return dict(
-                sale_id = str(self.sale_id.int)[:5],
                 attedt_id = self.attedt_id,
                 attedt_name = self.attedt_name,
                 product_name = self.product_name,
