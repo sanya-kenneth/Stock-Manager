@@ -7,6 +7,7 @@ class DevelopmentConfig(BaseConfig):
     """Development configuraion. Loads development configuration data when the app is in the development environment"""
     DEBUG = True
     TESTING = False
+    DATABASE_URL = 'postgres://postgres@localhost/store'
     
 class TestingConfig(BaseConfig):
     """Testing configuraion. Loads Test configuration data when the app is in the Test environment"""
