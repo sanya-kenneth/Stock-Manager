@@ -2,8 +2,11 @@ from flask import Flask
 from app.products.views import product
 from app.auth.views import auths
 from app.sales.views import sale_bp
-from app import database
+# from app import database
 from instance.config import app_config
+import sys
+import os.path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 
