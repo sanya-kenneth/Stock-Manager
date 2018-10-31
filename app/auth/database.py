@@ -56,6 +56,21 @@ class Database():
         for com in commands:
             self.c.execute(com)
 
+  
+    def select_users(self):
+        sql = ("""SELECT * from user_table """)
+        self.c.execute(sql)
+        rows = self.c.fetchall()
+        return rows
+    
+    def select_a_user(self,user_id_in):
+        sql = ("""SELECT * from user_table WHERE userid = {} """.format(user_id_in))
+        self.c.execute(sql)
+        row = self.c.fetchone()
+        return row
+
+db = Database('postgres://postgres:psql@localhost:5432/store')
+
 # db = Database('postgres://postgres:psql@localhost:5432/store')
 # db.create_tables()
 
