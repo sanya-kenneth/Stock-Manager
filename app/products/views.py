@@ -1,9 +1,7 @@
 from flask import Blueprint,request,jsonify,json,make_response
 from .models import Product
 from app.auth.database import db
-# from ..auth.utility import admin_required,login_admin_required
-# from app.auth.views import admin_db,user_db
-
+import re
 
 
 
@@ -11,11 +9,10 @@ from app.auth.database import db
 # blueprint will handle all product routes for the app
 product = Blueprint('product',__name__)
 
-product_db = [] #List will hold all products created in the app
 
 
 @product.route('/products', methods=['POST'])
-def create_product(current_user):
+def create_product():
     """
     Function Adds a product to database given that the data input is valid
     If data input is not valid function will return a customise error message
@@ -32,25 +29,22 @@ def create_product(current_user):
         #check if content type is application/json
         if not request.content_type == 'application/json': 
             return jsonify({'error':'Wrong content-type'}),400
-        if admin_required() != True:
-            return jsonify({'error':'You are not allowed to access this resource'}),400
         if not product_name or not product_quantity or not product_price or product_description == "":
             return jsonify({'error':'One of the required fields is empty'}),400
         if not isinstance(product_price,int) or not isinstance(product_quantity,int) or product_price < 1 or product_quantity < 1:
             return jsonify({'error':'price or quantity must be a number and must be greater than 1'}),400
-        if (' ' in product_name) == True:
-            return jsonify({'error':'poduct cannot contain spaces'}),400
-        for product_item in product_db:
-            if product_name == product_item['product_name'] and product_description == product_item['product_description']\
-            and product_price == product_item['product_price']:
-                product_item['product_quantity'] = product_item['product_quantity'] + product_quantity
-                return jsonify({'message':'Product Updated Successfully'}),201
+        if re.search('[\s]',product_name) != None:
+            return jsonify({'error':'poductname cannot contain spaces'}),400
+        products = db.select_products()
+        for product in products:
+            if product_name == product[1] and product_description == product[4]:
+                return jsonify({'error':'Product already exists'}),400
         product = Product(product_name,product_quantity,product_price,product_description)
-        product_db.append(product.to_dict())
+        product.add_product()
         return jsonify({'status':'Product created'}),201
     except Exception:
-        return jsonify({'error':'required field/s missing'}), 400  
-
+        return jsonify({'error':'Required field/s missing'}),400
+    
 
 @product.route('/products', methods=['GET'])
 def get_products():
@@ -59,31 +53,75 @@ def get_products():
     If the database is empty, function will return a customised error
     """
     products = db.select_products()
-    
     if len(products) == 0:
         return jsonify({'error':'There no products at the moment'}),404
     return jsonify({'Products-Available':products}),200
 
 
-
-@product.route('/products/<product_id>', methods=['GET'])
-def get_product(product_id): 
+@product.route('/products/<productid>', methods=['GET'])
+def get_product(productid): 
     """
     Function returns a specific product filtered by a product id
     :params product_id:
     """
     store_products = db.select_products() 
+    if not isinstance(productid,int):
+        return jsonify({'error':'productid must be a number'})
     if len(store_products) == 0:
         return jsonify({'error':'There no products at the moment'}),404
-    for product_item in store_products:
-        if product_item[0] == product_id:
-            return jsonify({'result':product_item}),200
-    return jsonify({'error':'Product not found'}),404 
+    product_fetched = db.select_a_product(productid)
+    if product_fetched == None:
+        return jsonify({'error':'Product was not found'}),404
+    return jsonify({'result':product_fetched}),200
+
+
+@product.route('/products/<productid>', methods=['PUT'])
+def update_product(productid):
+    """
+    Function updates a product if the provided productid is correct
+    :params productid:
+    """
+    try:
+        data = request.data
+        data = json.loads(data)
+        prodt_name = data['productname']
+        prodt_quantity = data['productquantity']
+        prodt_price = data['productprice']
+        prodt_desc = data['productdescription']
+        if not isinstance(productid, int):
+            return jsonify({'error':'productid must be a number'}),400
+        if not request.content_type == 'application/json': 
+            return jsonify({'error':'Wrong content-type'}),400
+        if not prodt_name or not prodt_quantity or not prodt_price or not prodt_desc:
+            return jsonify({'error':'required field cannot be empty'}),400
+        if re.search('[\s]',prodt_name) != None:
+            return jsonify({'error':'poductname cannot contain spaces'}),400
+        if not isinstance(prodt_price,int) or not isinstance(prodt_quantity,int) or prodt_price < 1 or prodt_quantity < 1:
+            return jsonify({'error':'price or quantity must be a number and must be greater than 1'}),400
+        product_to_update = db.select_a_product(productid)
+        if product_to_update == None:
+            return jsonify({'error':'Product not found'}),404
+        if product_to_update[0] == int(productid):
+            db.update_product(productid,prodt_name,prodt_quantity,prodt_price,prodt_desc)
+            return jsonify({'message':'Product successfuly updated'}),201
+    except Exception:
+        return jsonify({'error':'Required field/s missing'}),400
+
+
+@product.route('/products/<productid>', methods=['DELETE'])
+def delete_product(productid):
+    selected_product = db.select_a_product(productid)
+    if selected_product == None:
+        return jsonify({'error':'Product not found'}),404
+    db.delete_product(productid)
+    return jsonify({'message':'Product was deleted successfuly'})
+    
+    
 
 #custom error handler
-@product.app_errorhandler(404)
+@product.app_errorhandler(405)
 def not_found(error):
-    """ Customise HTTP 404 Not found error to return custom message
-        when ever an HTTP error 404 is raised.
+    """ Customise HTTP 405 Method not allowed error to return custom message
+        when ever an HTTP error 405 is raised.
     """
-    return make_response(jsonify({'error':' :( Oops nothing here'})),404
+    return make_response(jsonify({'error':' :( Oops Method Not Allowed'})),405
