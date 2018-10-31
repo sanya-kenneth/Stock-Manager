@@ -26,33 +26,6 @@ class Product(Database):
         self.c.execute(sql)
         return True
 
-    def select_products(self):
-        sql = ("""SELECT * from product_table """)
-        self.c.execute(sql)
-        rows = self.c.fetchall()
-        return rows
-
-    def select_a_product(self,product_id_in):
-        sql = ("""SELECT * from product_table WHERE productid = {} """.format(product_id_in))
-        self.c.execute(sql)
-        row = self.c.fetchone()
-        return row
-
-    def update_product(self,product_id_in,product_name_in,product_quantity_in,product_price_in,product_description_in):
-            try:
-                sql = ("""UPDATE product_table SET productname = '{}',productquantity = '{}',
-                productprice = '{}', productdescription = '{}' WHERE productid = '{}' """.format(product_name_in,product_quantity_in,\
-                product_price_in,product_description_in,product_id_in))
-                self.c.execute(sql)
-                return True
-            except:
-                return False
-    
-    def delete_product(self,product_id):
-        sql = ("""DELETE from product_table WHERE productid = '{}' """.format(product_id))
-        self.c.execute(sql)
-        return "deleted"
-
 
 
 
