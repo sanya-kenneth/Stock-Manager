@@ -68,6 +68,48 @@ class Database():
         self.c.execute(sql)
         row = self.c.fetchone()
         return row
+    
+    
+    def select_products(self):
+        sql = ("""SELECT * from product_table """)
+        self.c.execute(sql)
+        rows = self.c.fetchall()
+        return rows
+
+    def select_a_product(self,product_id_in):
+        sql = ("""SELECT * from product_table WHERE productid = {} """.format(product_id_in))
+        self.c.execute(sql)
+        row = self.c.fetchone()
+        return row
+
+    def update_product(self,product_id_in,product_name_in,product_quantity_in,product_price_in,product_description_in):
+            try:
+                sql = ("""UPDATE product_table SET productname = '{}',productquantity = '{}',
+                productprice = '{}', productdescription = '{}' WHERE productid = '{}' """.format(product_name_in,product_quantity_in,\
+                product_price_in,product_description_in,product_id_in))
+                self.c.execute(sql)
+                return True
+            except:
+                return False
+    
+    def delete_product(self,product_id):
+        sql = ("""DELETE from product_table WHERE productid = '{}' """.format(product_id))
+        self.c.execute(sql)
+        return "deleted"
+
+    
+    def select_sales(self):
+        sql = ("""SELECT * from sales_table """)
+        self.c.execute(sql)
+        rows = self.c.fetchall()
+        return rows
+
+    def select_sale(self,sale_id):
+        sql = ("""SELECT * from sales_table WHERE saleid = '{}' """.format(sale_id))
+        self.c.execute(sql)
+        row = self.c.fetchone()
+        return row
+
 
 db = Database('postgres://postgres:psql@localhost:5432/store')
 

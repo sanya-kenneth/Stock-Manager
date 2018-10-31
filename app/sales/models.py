@@ -22,18 +22,6 @@ class Sale(Database):
         self.attedt_name,self.product_name,self.product_quantity,self.Total,self.sale_date))
         self.c.execute(sql)
 
-    def select_sales(self):
-        sql = ("""SELECT * from sales_table """)
-        self.c.execute(sql)
-        rows = self.c.fetchall()
-        return rows
-
-    def select_sale(self,sale_id):
-        sql = ("""SELECT * from sales_table WHERE saleid = '{}' """.format(sale_id))
-        self.c.execute(sql)
-        row = self.c.fetchone()
-        return row
-
 
 
 

@@ -1,5 +1,6 @@
 from flask import Blueprint,request,jsonify,json,make_response
 from .models import Product
+from app.auth.database import db
 # from ..auth.utility import admin_required,login_admin_required
 # from app.auth.views import admin_db,user_db
 
@@ -49,17 +50,21 @@ def create_product(current_user):
         return jsonify({'status':'Product created'}),201
     except Exception:
         return jsonify({'error':'required field/s missing'}), 400  
+
+
 @product.route('/products', methods=['GET'])
 def get_products():
     """
     Function returns products from the database
     If the database is empty, function will return a customised error
     """
-    if len(admin_db) == 0 and len(user_db) == 0:
-        return jsonify({'error':'login first'}),401
-    if len(product_db) == 0:
+    products = db.select_products()
+    
+    if len(products) == 0:
         return jsonify({'error':'There no products at the moment'}),404
-    return jsonify({'Products-Available':product_db}),200
+    return jsonify({'Products-Available':products}),200
+
+
 
 @product.route('/products/<product_id>', methods=['GET'])
 def get_product(product_id): 
@@ -67,12 +72,11 @@ def get_product(product_id):
     Function returns a specific product filtered by a product id
     :params product_id:
     """
-    if len(admin_db) == 0 and len(user_db) == 0:
-        return jsonify({'error':'login first'}),401  
-    if len(product_db) == 0:
+    store_products = db.select_products() 
+    if len(store_products) == 0:
         return jsonify({'error':'There no products at the moment'}),404
-    for product_item in product_db:
-        if product_item['product_id'] == product_id:
+    for product_item in store_products:
+        if product_item[0] == product_id:
             return jsonify({'result':product_item}),200
     return jsonify({'error':'Product not found'}),404 
 
