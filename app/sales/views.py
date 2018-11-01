@@ -39,7 +39,6 @@ def create_sale_order(current_user):
             return jsonify({'error':'Product not found'}),404
         if len(products) == 0:
             return jsonify({'error':'There no products in the system'}),404
-        print(product_selected)
         if product_selected[2] == 0 or product_quantity > product_selected[2]:
             return jsonify({'error':'Sorry product is out of stock or quantity selected is higher than quantity available'}),400
         Total = int(product_selected[3]) * product_quantity

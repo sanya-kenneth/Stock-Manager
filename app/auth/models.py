@@ -19,9 +19,8 @@ class User(Database):
         self.admin_status = admin_status
     
     def insert_user(self):
-        sql = ("""INSERT INTO user_table(username, useremail, userpassword,adminstatus) VALUES ('{}','{}','{}','{}')""" \
-        .format(self.username, self.email, self.password, self.admin_status))
-        self.c.execute(sql)
+        sql = ("INSERT INTO user_table  VALUES('%s', '%s', '%s', '%s')", (self.username, self.email,self.password,self.admin_status))
+        self.cursor.execute(sql)
         return True
 
    

@@ -3,6 +3,7 @@ import psycopg2
 import psycopg2.extras as pg_extra
 from flask import current_app as app
 
+
 class Database():
     """
     This class connects the app to the database
@@ -17,7 +18,7 @@ class Database():
 
         self.con = psycopg2.connect(database=db,user=username,password=password,host=hostname, port=port)
         self.con.autocommit = True
-        self.c = self.con.cursor()
+        self.cursor = self.con.cursor()
         print("you are connected to the database")
 
     def create_tables(self):
@@ -54,62 +55,48 @@ class Database():
         )
       
         for com in commands:
-            self.c.execute(com)
-
+            self.cursor.execute(com)
   
     def select_users(self):
         sql = ("""SELECT * from user_table """)
-        self.c.execute(sql)
-        rows = self.c.fetchall()
-        return rows
-    
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
+       
     def select_a_user(self,user_id_in):
         sql = ("""SELECT * from user_table WHERE userid = {} """.format(user_id_in))
-        self.c.execute(sql)
-        row = self.c.fetchone()
-        return row
-    
+        self.cursor.execute(sql)
+        return self.cursor.fetchone()
     
     def select_products(self):
         sql = ("""SELECT * from product_table """)
-        self.c.execute(sql)
-        rows = self.c.fetchall()
-        return rows
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
 
     def select_a_product(self,product_id_in):
         sql = ("""SELECT * from product_table WHERE productid = {} """.format(product_id_in))
-        self.c.execute(sql)
-        row = self.c.fetchone()
-        return row
+        self.cursor.execute(sql)
+        return self.cursor.fetchone()
 
     def update_product(self,product_id_in,product_name_in,product_quantity_in,product_price_in,product_description_in):
-            try:
-                sql = ("""UPDATE product_table SET productname = '{}',productquantity = '{}',
-                productprice = '{}', productdescription = '{}' WHERE productid = '{}' """.format(product_name_in,product_quantity_in,\
-                product_price_in,product_description_in,product_id_in))
-                self.c.execute(sql)
-                return True
-            except:
-                return False
-    
+         
+        sql = ("""UPDATE product_table SET productname = '{}',productquantity = '{}',
+        productprice = '{}', productdescription = '{}' WHERE productid = '{}' """\
+         .format(product_name_in, product_quantity_in, product_price_in,product_description_in,product_id_in))
+        return self.cursor.execute(sql)
+               
     def delete_product(self,product_id):
         sql = ("""DELETE from product_table WHERE productid = '{}' """.format(product_id))
-        self.c.execute(sql)
-        return "deleted"
+        return self.cursor.execute(sql)
 
-    
     def select_sales(self):
         sql = ("""SELECT * from sales_table """)
-        self.c.execute(sql)
-        rows = self.c.fetchall()
-        return rows
-
+        self.cursor.execute(sql)
+        return self.cursor.fetchall()
+       
     def select_sale(self,sale_id):
         sql = ("""SELECT * from sales_table WHERE saleid = '{}' """.format(sale_id))
-        self.c.execute(sql)
-        row = self.c.fetchone()
-        return row
-
+        self.cursor.execute(sql)
+        return self.cursor.fetchone()
 
 db = Database('postgres://postgres:psql@localhost:5432/store')
 

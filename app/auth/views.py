@@ -49,7 +49,7 @@ def create_store_attendant(current_user):
     If data input is not valid function will return a customise error message
 
     """
-    # try:
+    #try:
     data = request.data
     data = json.loads(data)
     user_name = data['user_name']
