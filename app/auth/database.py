@@ -26,7 +26,7 @@ class Database():
         """
         CREATE TABLE IF NOT EXISTS user_table(
         userid SERIAL PRIMARY KEY,
-        username TEXT NOT NULL,
+        username VARCHAR(50) NOT NULL,
         useremail TEXT NOT NULL,
         userpassword TEXT NOT NULL,
         adminstatus BOOL NOT NULL
@@ -34,7 +34,7 @@ class Database():
         """,
         """ CREATE TABLE IF NOT EXISTS product_table(
         productid SERIAL PRIMARY KEY,
-        productname TEXT NOT NULL,
+        productname VARCHAR(50) NOT NULL,
         productquantity INT NOT NULL,
         productprice INT NOT NULL,
         productdescription TEXT NOT NULL,
@@ -45,7 +45,7 @@ class Database():
         saleid SERIAL PRIMARY KEY,
         attendantid INT NOT NULL,
         attendantname VARCHAR(50) NOT NULL,
-        productname VARCHAR(50) NOT NULL,
+        productid INT NOT NULL,
         productquantity INT NOT NULL,
         TOTAL INT NOT NULL,
         saledate TEXT NOT NULL

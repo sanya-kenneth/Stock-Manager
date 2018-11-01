@@ -4,14 +4,15 @@ from app.auth.views import auths
 from app.sales.views import sale_bp
 # from app import database
 from instance.config import app_config
-import sys
-import os.path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# import sys
+# import os.path
+# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 
 def create_app(config_name):
     app = Flask(__name__,instance_relative_config=True)
+    app.config['SECRET'] = 'sanya'
     app.config.from_object(app_config[config_name])
     app.config.from_pyfile('config.py')
       

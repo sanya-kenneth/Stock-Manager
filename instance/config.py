@@ -2,6 +2,7 @@ class BaseConfig:
     """Default configuration. Details from this configuration class are shared across all environments  """
     DEBUG = False
     TESTING = False
+    DATABASE_URL = 'postgres://postgres@localhost/store'
 
 class DevelopmentConfig(BaseConfig):
     """Development configuraion. Loads development configuration data when the app is in the development environment"""

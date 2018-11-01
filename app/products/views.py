@@ -1,6 +1,8 @@
 from flask import Blueprint,request,jsonify,json,make_response
 from .models import Product
 from app.auth.database import db
+from app.auth.views import protected_route
+from app.auth.views import check_admin
 import re
 
 
@@ -12,7 +14,8 @@ product = Blueprint('product',__name__)
 
 
 @product.route('/products', methods=['POST'])
-def create_product():
+@protected_route
+def create_product(current_user):
     """
     Function Adds a product to database given that the data input is valid
     If data input is not valid function will return a customise error message
@@ -26,6 +29,8 @@ def create_product():
         product_quantity = data['product_quantity']
         product_price = data['product_price']
         product_description = data['product_description']
+        if check_admin(current_user) == True:
+            return jsonify({'error':'Access Denied. Please login as admin'}),401
         #check if content type is application/json
         if not request.content_type == 'application/json': 
             return jsonify({'error':'Wrong content-type'}),400
@@ -47,7 +52,8 @@ def create_product():
     
 
 @product.route('/products', methods=['GET'])
-def get_products():
+@protected_route
+def get_products(current_user):
     """
     Function returns products from the database
     If the database is empty, function will return a customised error
@@ -59,14 +65,13 @@ def get_products():
 
 
 @product.route('/products/<productid>', methods=['GET'])
-def get_product(productid): 
+@protected_route
+def get_product(current_user,productid): 
     """
     Function returns a specific product filtered by a product id
     :params product_id:
     """
     store_products = db.select_products() 
-    if not isinstance(productid,int):
-        return jsonify({'error':'productid must be a number'})
     if len(store_products) == 0:
         return jsonify({'error':'There no products at the moment'}),404
     product_fetched = db.select_a_product(productid)
@@ -76,7 +81,8 @@ def get_product(productid):
 
 
 @product.route('/products/<productid>', methods=['PUT'])
-def update_product(productid):
+@protected_route
+def update_product(current_user,productid):
     """
     Function updates a product if the provided productid is correct
     :params productid:
@@ -88,8 +94,6 @@ def update_product(productid):
         prodt_quantity = data['productquantity']
         prodt_price = data['productprice']
         prodt_desc = data['productdescription']
-        if not isinstance(productid, int):
-            return jsonify({'error':'productid must be a number'}),400
         if not request.content_type == 'application/json': 
             return jsonify({'error':'Wrong content-type'}),400
         if not prodt_name or not prodt_quantity or not prodt_price or not prodt_desc:
@@ -109,7 +113,8 @@ def update_product(productid):
 
 
 @product.route('/products/<productid>', methods=['DELETE'])
-def delete_product(productid):
+@protected_route
+def delete_product(current_user,productid):
     selected_product = db.select_a_product(productid)
     if selected_product == None:
         return jsonify({'error':'Product not found'}),404
