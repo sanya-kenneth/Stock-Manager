@@ -6,7 +6,7 @@ from flask import current_app as app
 #Store attendant class model
 class User(Database):
     def __init__(self,username,email,password,admin_status=False):
-        Database.__init__(self,'postgres://postgres:psql@localhost:5432/store')
+        Database.__init__(self,app.config['DATABASE_URL'])
 
         """
         Class for creating the store attendant object
@@ -19,7 +19,8 @@ class User(Database):
         self.admin_status = admin_status
     
     def insert_user(self):
-        sql = ("INSERT INTO user_table  VALUES('%s', '%s', '%s', '%s')", (self.username, self.email,self.password,self.admin_status))
+        sql = ("""INSERT INTO user_table(username, useremail, userpassword,adminstatus) VALUES ('{}','{}','{}','{}')""" \
+        .format(self.username, self.email, self.password, self.admin_status))
         self.cursor.execute(sql)
         return True
 

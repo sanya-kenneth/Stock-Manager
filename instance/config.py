@@ -3,6 +3,7 @@ class BaseConfig:
     DEBUG = False
     TESTING = False
     DATABASE_URL = 'postgres://postgres@localhost/store'
+    SECRET = 'kkkkkkkkk'
 
 class DevelopmentConfig(BaseConfig):
     """Development configuraion. Loads development configuration data when the app is in the development environment"""

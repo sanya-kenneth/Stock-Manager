@@ -1,4 +1,5 @@
 import datetime
+from flask import current_app as app
 import sys
 import os.path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -12,7 +13,7 @@ class Product(Database):
     :params  product_name,product_quantity,product_price,product_description:
     """
     def __init__(self,product_name,product_quantity,product_price,product_description):
-        Database.__init__(self,'postgres://postgres:psql@localhost:5432/store')
+        Database.__init__(self,app.config['DATABASE_URL'])
         self.product_name = product_name
         self.product_quantity = product_quantity
         self.product_price = product_price
@@ -23,7 +24,7 @@ class Product(Database):
     def add_product(self):
         sql = ("""INSERT INTO product_table(productname, productquantity, productprice,productdescription,dateadded) VALUES ('{}','{}','{}','{}','{}')""" \
         .format(self.product_name, self.product_quantity, self.product_price, self.product_description, self.date_added))
-        self.c.execute(sql)
+        self.cursor.execute(sql)
         return True
 
 

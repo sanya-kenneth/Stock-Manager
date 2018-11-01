@@ -47,6 +47,7 @@ class Database():
         attendantid INT NOT NULL,
         attendantname VARCHAR(50) NOT NULL,
         productid INT NOT NULL,
+        productname VARCHAR(50) NOT NULL,
         productquantity INT NOT NULL,
         TOTAL INT NOT NULL,
         saledate TEXT NOT NULL
@@ -82,11 +83,13 @@ class Database():
         sql = ("""UPDATE product_table SET productname = '{}',productquantity = '{}',
         productprice = '{}', productdescription = '{}' WHERE productid = '{}' """\
          .format(product_name_in, product_quantity_in, product_price_in,product_description_in,product_id_in))
-        return self.cursor.execute(sql)
+        self.cursor.execute(sql)
+        return True
                
     def delete_product(self,product_id):
         sql = ("""DELETE from product_table WHERE productid = '{}' """.format(product_id))
-        return self.cursor.execute(sql)
+        self.cursor.execute(sql)
+        return True
 
     def select_sales(self):
         sql = ("""SELECT * from sales_table """)
@@ -98,12 +101,14 @@ class Database():
         self.cursor.execute(sql)
         return self.cursor.fetchone()
 
-db = Database('postgres://postgres:psql@localhost:5432/store')
+    def update_quantity(self,product_id_in,product_quantity_in):
+        sql = ("""UPDATE product_table SET productquantity = '{}' WHERE productid = '{}'""".format(product_quantity_in,product_id_in))
+        self.cursor.execute(sql)
+        return True
+
+db = Database(app.config['DATABASE_URL'])
 
 # db = Database('postgres://postgres:psql@localhost:5432/store')
 # db.create_tables()
-
-
-
 # app.config(['DATABASE_URL'])
 # 'postgres://postgres@localhost/store'
