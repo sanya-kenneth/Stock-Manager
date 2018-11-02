@@ -1,4 +1,5 @@
 from flask import Blueprint,request,jsonify,json
+from flask import current_app as app
 import datetime
 from .models import Sale
 from app.auth.database import db
@@ -9,7 +10,6 @@ from app.auth.views import protected_route
 # create sales blueprint
 # blueprint will handle all sales routes for the app and routes for sale records
 sale_bp = Blueprint('sale_bp',__name__)
-
 
 
 @sale_bp.route('/sales', methods=['POST'])

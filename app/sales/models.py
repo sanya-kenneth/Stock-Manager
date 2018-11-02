@@ -9,7 +9,7 @@ class Sale(Database):
     :params  attedt_id, attedt_name, product_name, product_quantity, product_price, Total, sale_date:
     """
     def __init__(self,*args,**kwargs):
-        Database.__init__(self,app.config['DATABASE_URL'])
+        Database.__init__(self,app.config['DATABASE_URI'])
         self.attedt_id = args[0]
         self.attedt_name = args[1]
         self.product_id = args[2]

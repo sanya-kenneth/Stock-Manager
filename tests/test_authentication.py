@@ -7,7 +7,11 @@ class AuthTestCase(BaseTest):
     def test_returns_error_if_request_content_type_is_not_application_json(self):
         """ Method checks if the create attendant and create admin endpoints return an error 
             if the request.content-type is not application/json """
-        res = self.app.post('/api/v1/users', content_type="text", data=json.dumps(dict(user_name = 'sanya',
+
+        headers = {
+    'Content-Type': "text",
+    'token': "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiamFuZUBnbWFpbC5jb20iLCJleHAiOjE1NDExMTI1Nzh9.G918BsgwvJwc4kBSa4qIYoY-_pVyi7b51nl9AhlT9l4"}
+        res = self.app.post('/api/v1/users', headers = headers, data=json.dumps(dict(user_name = 'sanya',
                                                                                         user_password = '124')))
 
         self.assertEqual(res.status_code,400)

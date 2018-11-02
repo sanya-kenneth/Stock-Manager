@@ -6,7 +6,7 @@ from flask import current_app as app
 #Store attendant class model
 class User(Database):
     def __init__(self,username,email,password,admin_status=False):
-        Database.__init__(self,app.config['DATABASE_URL'])
+        Database.__init__(self,app.config['DATABASE_URI'])
 
         """
         Class for creating the store attendant object

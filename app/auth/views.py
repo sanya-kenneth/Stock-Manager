@@ -1,7 +1,7 @@
 from flask import Blueprint,request,jsonify,json
 from flask import current_app as app
 from app.auth.models import User
-from app.auth.database import Database,db
+from app.auth.database import db
 import jwt
 from werkzeug.security import check_password_hash,generate_password_hash
 from validate_email import validate_email
@@ -11,9 +11,12 @@ import datetime
 from app.auth.utility import check_admin
 
 
+
 # Users and authentication blueprint
 # blueprint will handle all app user routes
 auths = Blueprint('auths',__name__)
+
+# db = Database('postgres://postgres:psql@localhost:5432/store')
 
 
 def protected_route(f):
@@ -44,35 +47,35 @@ def create_store_attendant(current_user):
     If data input is not valid function will return a customise error message
 
     """
-    try:
-        data = request.data
-        data = json.loads(data)
-        user_name = data['user_name']
-        user_email = data['user_email']
-        user_password = str(data['user_password'])
-        if check_admin(current_user) == True:
-            return jsonify({'error':'Access Denied. Please login as admin'}),401
-        #check if content type is application/json
-        if not request.content_type == 'application/json': 
-            return jsonify({'error':'Wrong content-type'}),400
-        if user_name == "" or user_password == "" or user_email == "":
-            return jsonify({'error':'username,email or password cannot be empty'}),400
-        if type(user_name) != str or type(user_email) != str:
-            return jsonify({'error':'username or email must be a string'}),400
-        if re.search(r'[\s]',user_name) != None:
-            return jsonify({'error':'Username cannot contain spaces'}),400
-        if validate_email(user_email) == False:
-            return jsonify({'error':'Invalid email'}),400
-        usr_password = generate_password_hash(user_password, method='sha256')
-        user = User(user_name,user_email,usr_password)
-        users = db.select_users()
-        for fetch_user in users:
-            if fetch_user[1] == user_name or fetch_user[2] == user_email:
-                return jsonify({'error':'user already exists'}),400
-        user.insert_user()
-        return jsonify({'message':'Store attendant was successfully registered'}),201
-    except Exception:
-        return jsonify({'error':'Required field/s missing'}),400
+    # try:
+    data = request.data
+    data = json.loads(data)
+    user_name = data['user_name']
+    user_email = data['user_email']
+    user_password = str(data['user_password'])
+    # if check_admin(current_user) == True:
+    #     return jsonify({'error':'Access Denied. Please login as admin'}),401
+    #check if content type is application/json
+    if not request.content_type == 'application/json': 
+        return jsonify({'error':'Wrong content-type'}),400
+    if user_name == "" or user_password == "" or user_email == "":
+        return jsonify({'error':'username,email or password cannot be empty'}),400
+    if type(user_name) != str or type(user_email) != str:
+        return jsonify({'error':'username or email must be a string'}),400
+    if re.search(r'[\s]',user_name) != None:
+        return jsonify({'error':'Username cannot contain spaces'}),400
+    if validate_email(user_email) == False:
+        return jsonify({'error':'Invalid email'}),400
+    usr_password = generate_password_hash(user_password, method='sha256')
+    user = User(user_name,user_email,usr_password)
+    users = db.select_users()
+    for fetch_user in users:
+        if fetch_user[1] == user_name or fetch_user[2] == user_email:
+            return jsonify({'error':'user already exists'}),400
+    user.insert_user()
+    return jsonify({'message':'Store attendant was successfully registered'}),201
+    # except Exception:
+    #     return jsonify({'error':'Required field/s missing'}),400
     
                    
             

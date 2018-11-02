@@ -1,4 +1,5 @@
 from flask import Blueprint,request,jsonify,json,make_response
+from flask import current_app as app
 from .models import Product
 from app.auth.database import db
 from app.auth.views import protected_route

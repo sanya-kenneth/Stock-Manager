@@ -1,6 +1,5 @@
 from urllib.parse import urlparse
 import psycopg2
-import psycopg2.extras as pg_extra
 from flask import current_app as app
 
 
@@ -106,7 +105,7 @@ class Database():
         self.cursor.execute(sql)
         return True
 
-db = Database(app.config['DATABASE_URL'])
+db = Database('postgres://postgres:psql@localhost:5432/store')
 
 # db = Database('postgres://postgres:psql@localhost:5432/store')
 # db.create_tables()

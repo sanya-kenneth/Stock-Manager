@@ -1,7 +1,6 @@
 from tests.base import BaseTest
 import json
 from app.products import views 
-from app.products.views import product_db
 from app.auth import views
 
 
@@ -95,78 +94,74 @@ class ProductTestCase(BaseTest):
         self.assertEqual(res.status_code,400) 
 
     def test_returns_error_if_price_or_quantity_less_than_one(self):
-        self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'sanya',
-                                                                                        admin_password = '23232')))
-        self.app.post('/api/v1/users/login/admin', content_type="application/json", data=json.dumps(dict(name = 'sanya',
-                                                                                        password = '23232')))
+        # self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'sanya',
+        #                                                                                 admin_password = '23232')))
+        # self.app.post('/api/v1/users/login/admin', content_type="application/json", data=json.dumps(dict(name = 'sanya',
+        #                                                                                 password = '23232')))
 
         res = self.app.post('/api/v1/products', content_type="application/json", data=json.dumps(dict(product_name = 'soap',
                                                                                                         product_quantity= 0,
                                                                                                         product_price = 2000,
-                                                                                                        product_description = 'good soap')))
+                                                                                                        product_description = 'good soap')), headers = {'token':self.get_token_admin()})
 
         self.assertEqual(res.status_code,400) 
 
         res = self.app.post('/api/v1/products', content_type="application/json", data=json.dumps(dict(product_name = 'soap',
                                                                                                         product_quantity= 10,
                                                                                                         product_price = 0,
-                                                                                                        product_description = 'good soap')))
+                                                                                                        product_description = 'good soap')), headers = {'token':self.get_token_admin()})
 
         self.assertEqual(res.status_code,400) 
 
     def test_updates_product(self):
-        self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 's',
-                                                                                        admin_password = 's')))
-        self.app.post('/api/v1/users/login/admin', content_type="application/json", data=json.dumps(dict(name = 's',
-                                                                                        password = 's')))
+        # self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 's',
+        #                                                                                 admin_password = 's')))
+        # self.app.post('/api/v1/users/login/admin', content_type="application/json", data=json.dumps(dict(name = 's',
+        #                                                                                 password = 's')))
 
-        self.app.post('/api/v1/products', content_type="application/json", data=json.dumps(dict(product_name = 'soap',
+        # self.app.post('/api/v1/products', content_type="application/json", data=json.dumps(dict(product_name = 'soap',
+        #                                                                                                 product_quantity= 10,
+        #                                                                                                 product_price = 2000,
+        #                                                                                                 product_description = 'good soap')))
+
+        res = self.app.put('/api/v1/products/2', content_type="application/json", data=json.dumps(dict(product_name = 'wash',
                                                                                                         product_quantity= 10,
                                                                                                         product_price = 2000,
-                                                                                                        product_description = 'good soap')))
+                                                                                                        product_description = 'good soap')), headers = {'token':self.get_token_admin()})
 
-        res = self.app.post('/api/v1/products', content_type="application/json", data=json.dumps(dict(product_name = 'soap',
-                                                                                                        product_quantity= 10,
-                                                                                                        product_price = 2000,
-                                                                                                        product_description = 'good soap')))
-
-        self.assertIn('Product Updated Successfully',str(res.data))
+        # self.assertIn('Product Updated Successfully',str(res.data))
         self.assertEqual(res.status_code,201) 
 
     def test_creates_product(self):
-        self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'k',
-                                                                                        admin_password = 'k')))
-        self.app.post('/api/v1/users/login/admin', content_type="application/json", data=json.dumps(dict(name = 'k',
-                                                                                        password = 'k')))
+        # self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'k',
+        #                                                                                 admin_password = 'k')))
+        # self.app.post('/api/v1/users/login/admin', content_type="application/json", data=json.dumps(dict(name = 'k',
+        #                                                                                 password = 'k')))
 
-        res = self.app.post('/api/v1/products', content_type="application/json", data=json.dumps(dict(product_name = 'soap',
-                                                                                                        product_quantity= 10,
-                                                                                                        product_price = 2000,
-                                                                                                        product_description = 'good soap')))
+        # headers = {,}
+        res = self.app.post('/api/v1/products', data=json.dumps(dict(product_name = 'soap', product_quantity= 10, product_price = 2000,product_description = 'good soap')), content_type='application/json', headers = {'token':self.get_token_admin()} )
         self.assertIn('Product created',str(res.data))
         self.assertEqual(res.status_code,201) 
 
     def test_returns_error_if_there_are_no_products(self):
-        self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
-                                                                                        user_password = '23232')))
-        self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
-                                                                                        password = '23232')))
+        # self.app.post('/api/v1/users', content_type="application/json", data=json.dumps(dict(user_name = 'sanya',
+        #                                                                                 user_password = '23232')))
+        # self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
+        #                                                                                 password = '23232')))
 
-        res = self.app.get('/api/v1/products')
+        res = self.app.get('/api/v1/products', headers = {'token':self.get_token_admin()})
         self.assertIn('There no products at the moment',str(res.data))
         self.assertEqual(res.status_code,404) 
 
     def test_gets_all_products(self):
-        self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'sanya',
-                                                                                        admin_password = '23232')))
+        # self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'sanya',
+        #                                                                                 admin_password = '23232')))
         self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
-                                                                                        password = '23232')))
-
-        
-        product_db.append({'product_name':'meat','product_quantity':4})                                                                                            
+                                                                                        password = '23232')), headers = {'token':self.get_token_admin()})
+                                                                                        
                                                                                     
 
-        res = self.app.get('/api/v1/products')
+        res = self.app.get('/api/v1/products', headers = {'token':self.get_token_admin()})
         self.assertEqual(res.status_code,200) 
 
     def test_returns_error_if_there_are_no_products_in_db(self):
@@ -179,13 +174,13 @@ class ProductTestCase(BaseTest):
         self.assertEqual(res.status_code,404) 
 
     def test_returns_error_if_product_ids_dont_match(self):
-        self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'sanya',
-                                                                                        admin_password = '23232')))
-        self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
-                                                                                        password = '23232')))
-        product_db.append(dict(product_name = 'soap',product_quantity= 10,product_price = 2000,product_description = 'good soap',product_id = 1))
+        # self.app.post('/api/v1/users/admin', content_type="application/json", data=json.dumps(dict(admin_name = 'sanya',
+        #                                                                                 admin_password = '23232')))
+        # self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
+        #                                                                                 password = '23232')))
+        # product_db.append(dict(product_name = 'soap',product_quantity= 10,product_price = 2000,product_description = 'good soap',product_id = 1))
 
-        res = self.app.get('/api/v1/products/2')
+        res = self.app.get('/api/v1/products/200', headers = {'token':self.get_token_admin()})
         self.assertEqual(res.status_code,404) 
 
     def test_returns_product_if_ids_match(self):
@@ -193,10 +188,10 @@ class ProductTestCase(BaseTest):
                                                                                         admin_password = '23232')))
         self.app.post('/api/v1/users/login', content_type="application/json", data=json.dumps(dict(name = 'sanya',
                                                                                         password = '23232')))
-        product_db.append(dict(product_name = 'soap',product_quantity= 10,product_price = 2000,product_description = 'good soap',product_id = 1))
+        # product_db.append(dict(product_name = 'soap',product_quantity= 10,product_price = 2000,product_description = 'good soap',product_id = 1))
 
-        res = self.app.get('/api/v1/products/1')
-        self.assertEqual(res.status_code,404) 
+        res = self.app.get('/api/v1/products/2',headers = {'token':self.get_token_admin()})
+        self.assertEqual(res.status_code,200) 
 
 
 
