@@ -26,11 +26,11 @@ def protected_route(f):
         if not token:
             return jsonify({'message':'Token is missing'}),401
         try:
-            data = jwt.decode(token,app.config['SECRET'])  
-            data_fetch = db.select_users()
-            for user_info in data_fetch:
-                if user_info[2] == data['user']:
-                    current_user = user_info         
+            data = jwt.decode(token,app.config['SECRET'])   
+            data_fetch = db.select_a_user(data['user'])
+            # print(data_fetch)
+            current_user = data_fetch 
+                 
         except:
             return jsonify({'error':'Token is invalid'}),401
         return f(current_user,*args,**kwargs)
