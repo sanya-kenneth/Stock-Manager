@@ -91,7 +91,6 @@ def get_sale(current_user,sale_id):
     a sale id of one of the sale records in the database
     """  
     sale_record = db.select_sale(sale_id)
-    # sales = []
     returned_sale = {'Sale_Id':sale_record[0],
              'Attendant_Id':sale_record[1],
              'Attendant_name':sale_record[2],

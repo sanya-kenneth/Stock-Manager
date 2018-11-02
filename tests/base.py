@@ -21,25 +21,23 @@ class BaseTest(unittest.TestCase):
         self.db = Database(self.app.config['DATABASE_URI'])
         self.db.create_tables()
         self.app = self.app.test_client()
-        # self.app.config['SECRET']
-        # self.app.config['DATABASE_URI'] = 'postgres://postgres:psql@localhost:5432/test_store'
-        # self.user = User('ken','sanyakenneth@gmail.com','123')
-        # self.product = Product('soap',2,3000,'white star')
-        # self.sale = Sale('1215','Len','soap',3,4000,12000,datetime.datetime.utcnow())
+        self.user = User('ken','sanyakenneth@gmail.com','sanya')
+       
 
     def get_token_admin(self):
         user = {  
-                "email":"sanya@gmail.com",
-                "password":"sanya"
+                "email":"ken@gmail.com",
+                "password":"ken"
                 }
         res = self.app.post('/api/v1/users/login',data=json.dumps(user))
         data = json.loads(res.data.decode())
+        print(data)
         return data['token']
 
     def get_token_user(self):
         user = {  
-                "email":"ken@gmail.com",
-                "password":"ken"
+                "email":"robert@gmail.com",
+                "password":"we"
                 }
         res = self.app.post('/api/v1/users/login',data=json.dumps(user))
         data = json.loads(res.data.decode())
@@ -50,11 +48,6 @@ class BaseTest(unittest.TestCase):
     def tearDown(self):
        pass
 
-
-    
-
-    
-    
 if __name__ == '__main__':
     unittest.main()
 

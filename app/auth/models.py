@@ -23,11 +23,3 @@ class User(Database):
         .format(self.username, self.email, self.password, self.admin_status))
         self.cursor.execute(sql)
         return True
-
-   
-
-
-# me = User('sanya','ken',123)
-# me.create_tables()
-# me.insert_user()
-# print(me.select_users())

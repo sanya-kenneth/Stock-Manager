@@ -7,9 +7,6 @@ from app.auth.views import auths
 from app.sales.views import sale_bp
 from instance.config import app_config
 from app.auth.database import Database
-# import sys
-# import os.path
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 
 def create_app(config_name):

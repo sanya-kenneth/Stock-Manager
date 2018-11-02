@@ -18,7 +18,6 @@ class Database():
         self.con = psycopg2.connect(database=db,user=username,password=password,host=hostname, port=port)
         self.con.autocommit = True
         self.cursor = self.con.cursor()
-        print("you are connected to the database")
 
     def create_tables(self):
 
@@ -62,8 +61,8 @@ class Database():
         self.cursor.execute(sql)
         return self.cursor.fetchall()
        
-    def select_a_user(self,user_id_in):
-        sql = ("""SELECT * from user_table WHERE userid = {} """.format(user_id_in))
+    def select_a_user(self,user_email_in):
+        sql = ("""SELECT * from user_table WHERE useremail = '{}'""".format(user_email_in))
         self.cursor.execute(sql)
         return self.cursor.fetchone()
     
@@ -106,8 +105,3 @@ class Database():
         return True
 
 db = Database('postgres://postgres:psql@localhost:5432/store')
-
-# db = Database('postgres://postgres:psql@localhost:5432/store')
-# db.create_tables()
-# app.config(['DATABASE_URL'])
-# 'postgres://postgres@localhost/store'
