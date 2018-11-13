@@ -53,13 +53,4 @@ class TestSales(BaseTest):
         res = self.app.post('/api/v1/sales', content_type="application/json", data=json.dumps(dict(product_name = 'soap',
                                                                                         product_quantity = 13 )))
         self.assertEqual(res.status_code,400)
-
-        # views.product_db = []
-
- 
-        
-
-
-     
-
         

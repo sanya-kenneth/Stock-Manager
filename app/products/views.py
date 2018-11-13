@@ -65,6 +65,7 @@ def get_products(current_user):
     for product in products:
         products_list.append(dict(zip(keys,product)))
     return jsonify({'Products':products_list}),200
+    
 
 @product.route('/products/<productid>', methods=['GET'])
 @protected_route
