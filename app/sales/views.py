@@ -21,46 +21,46 @@ def create_sale_order(current_user):
 
     :params current_user:
     """
-    try:
-        data = request.data
-        data = json.loads(data)
-        product_id = data['product_id']
-        product_quantity = data['product_quantity']
-        if check_admin(current_user) != True:
-            return jsonify({'error':'Access Denied. Please login as a store attendant'}),401
-        #check if content type is application/json
-        if not request.content_type == 'application/json': 
-            return jsonify({'error':'Wrong content-type'}),400
-        if product_quantity < 1:
-            return jsonify({'error':'Product quantity cannot be less than 1'}),400
-        if not product_id or not isinstance(product_id,int) or not product_quantity or not isinstance(product_quantity,int):
-            return jsonify({'error':'Product quantity or id cannot be empty and must be a number'}),400
-        product_selected = db.select_a_product(product_id)
-        products = db.select_products()
-        if product_selected == None:
-            return jsonify({'message':'Product not found'}),404
-        if len(products) == 0:
-            return jsonify({'message':'There no products in the system'}),404
-        if product_selected[2] == 0 or product_quantity > product_selected[2]:
-            return jsonify({'error':'Sorry product is out of stock or quantity selected is higher than quantity available'}),400
-        Total = int(product_selected[3]) * product_quantity
-        new_quantity = product_selected[2] - product_quantity
-        sale_record = Sale(current_user[0],current_user[1],product_id,\
-        product_selected[1],product_quantity,Total,datetime.datetime.utcnow())
-        sale_record.add_sale()                 
-        sale_display = {
-                'Attendant_Id': sale_record.attedt_id,
-                'Attendant_name': sale_record.attedt_name,
-                'Product_Id': sale_record.product_id,
-                'Product_name': sale_record.product_name,
-                'Product_quantity':sale_record.product_quantity,
-                'Total':sale_record.Total,
-                'Sale_date':sale_record.sale_date 
-                    }
-        db.update_quantity(product_id,new_quantity)
-        return jsonify({'Sale_record':sale_display,'message':'Sale was successfully made'}),201        
-    except Exception:
-        return jsonify({'error':'Required field/s missing'}),400
+    # try:
+    data = request.data
+    data = json.loads(data)
+    product_id = data['product_id']
+    product_quantity = data['product_quantity']
+    if check_admin(current_user) != True:
+        return jsonify({'error':'Access Denied. Please login as a store attendant'}),401
+    #check if content type is application/json
+    if not request.content_type == 'application/json': 
+        return jsonify({'error':'Wrong content-type'}),400
+    if product_quantity < 1:
+        return jsonify({'error':'Product quantity cannot be less than 1'}),400
+    if not product_id or not isinstance(product_id,int) or not product_quantity or not isinstance(product_quantity,int):
+        return jsonify({'error':'Product quantity or id cannot be empty and must be a number'}),400
+    product_selected = db.select_a_product(product_id)
+    products = db.select_products()
+    if product_selected == None:
+        return jsonify({'message':'Product not found'}),404
+    if len(products) == 0:
+        return jsonify({'message':'There no products in the system'}),404
+    if product_selected[2] == 0 or product_quantity > product_selected[2]:
+        return jsonify({'error':'Sorry product is out of stock or quantity selected is higher than quantity available'}),400
+    Total = int(product_selected[3]) * product_quantity
+    new_quantity = product_selected[2] - product_quantity
+    sale_record = Sale(current_user[0],current_user[1],product_id,\
+    product_selected[1],product_quantity,Total,datetime.datetime.utcnow())
+    sale_record.add_sale()                 
+    sale_display = {
+            'Attendant_Id': sale_record.attedt_id,
+            'Attendant_name': sale_record.attedt_name,
+            'Product_Id': sale_record.product_id,
+            'Product_name': sale_record.product_name,
+            'Product_quantity':sale_record.product_quantity,
+            'Total':sale_record.Total,
+            'Sale_date':sale_record.sale_date 
+                }
+    db.update_quantity(product_id,new_quantity)
+    return jsonify({'Sale_record':sale_display,'message':'Sale was successfully made'}),201        
+    # except Exception:
+    #     return jsonify({'error':'Required field/s missing'}),400
     
         
 @sale_bp.route('/sales', methods=['GET'])

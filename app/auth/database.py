@@ -106,6 +106,7 @@ class Database():
         return True
 
 db = Database('postgres://postgres:psql@localhost:5432/store')
+# db.create_tables()
 
 # db = Database('postgres://postgres:psql@localhost:5432/store')
 # db.create_tables()
