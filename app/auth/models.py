@@ -1,12 +1,15 @@
-from app.auth.database import Database
+# from app.auth.database import Database
 from flask import current_app as app
+# from auth.database import Database
+# from app.auth.database import Database
+from app.auth.database import Database
 
 
 
 #Store attendant class model
 class User(Database):
     def __init__(self,username,email,password,admin_status=False):
-        Database.__init__(self,app.config['DATABASE_URI'])
+        # Database.__init__(self,'postgres://postgres:psql@localhost:5432/store')
 
         """
         Class for creating the store attendant object
@@ -28,6 +31,7 @@ class User(Database):
 
 
 # me = User('sanya','ken',123)
+# print(me)
 # me.create_tables()
 # me.insert_user()
 # print(me.select_users())

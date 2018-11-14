@@ -1,3 +1,5 @@
+import os
+
 class BaseConfig:
     """Default configuration. Details from this configuration class are shared across all environments  """
     DEBUG = False
@@ -11,13 +13,14 @@ class DevelopmentConfig(BaseConfig):
     TESTING = False
     DATABASE_URI = 'postgres://postgres:psql@localhost:5432/store'
     ENV = 'Development'
-    
+    # os.environ['APP_SETTINGS'] = 'Development'
 class TestingConfig(BaseConfig):
     """Testing configuraion. Loads Test configuration data when the app is in the Test environment"""
     DEBUG = True
     TESTING = True
     DATABASE_URI = 'postgres://postgres:psql@localhost:5432/test_store'
     ENV = 'Testing'
+    # os.environ['APP_SETTINGS'] = 'Testing'
 
 class ProductionConfig(BaseConfig):
     """Production configuraion. Loads Production configuration data when the app is in the Production environment"""

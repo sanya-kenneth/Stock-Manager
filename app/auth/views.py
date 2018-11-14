@@ -16,8 +16,6 @@ from app.auth.utility import check_admin
 # blueprint will handle all app user routes
 auths = Blueprint('auths',__name__)
 
-# db = Database('postgres://postgres:psql@localhost:5432/store')
-
 
 def protected_route(f):
     @wraps(f)
@@ -29,6 +27,7 @@ def protected_route(f):
             return jsonify({'message':'Token is missing'}),401
         try:
             data = jwt.decode(token,app.config['SECRET'])  
+            print(app.config['SECRET'])
             data_fetch = db.select_users()
             for user_info in data_fetch:
                 if user_info[2] == data['user']:

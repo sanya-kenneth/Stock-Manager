@@ -19,6 +19,7 @@ class BaseTest(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         self.db = Database(self.app.config['DATABASE_URI'])
+        # print(self.db.__init__)
         self.db.create_tables()
         self.app = self.app.test_client()
         # self.app.config['SECRET']

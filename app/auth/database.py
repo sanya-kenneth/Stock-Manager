@@ -1,6 +1,11 @@
 from urllib.parse import urlparse
 import psycopg2
+
+# from app import app
+# from instance.config import app_config
+import os
 from flask import current_app as app
+
 
 
 class Database():
@@ -18,7 +23,7 @@ class Database():
         self.con = psycopg2.connect(database=db,user=username,password=password,host=hostname, port=port)
         self.con.autocommit = True
         self.cursor = self.con.cursor()
-        print("you are connected to the database")
+        # print("you are connected to the database")
 
     def create_tables(self):
 
@@ -105,10 +110,36 @@ class Database():
         self.cursor.execute(sql)
         return True
 
-db = Database('postgres://postgres:psql@localhost:5432/store')
+
+# if  os.getenv('ENV') == 'Testing':
+#     db = Database('postgres://postgres:psql@localhost:5432/test_store')
+#     print('connected to test db')
+# # print(app_config)
+# if os.getenv('ENV') == 'Development':
+#     db = Database('postgres://postgres:psql@localhost:5432/store')
+#     print('connected to dev db')
+# else:
+#     # db = app.config['DATABASE_URI']
+#     print('Failed to connect')
+    # print(os.getenv('APP_SETTINGS'))
+    # os.environ['APP_SETTINGS'] = 'Testing'
+    # print(os.environ['APP_SETTINGS'])
+
+
+# app_context = app.app_context()
+# app_context.push()
+
+# app.name
+
+
+# class DBURL:
+#     def database_url():
+#         datadb = Database(app.config['DATABASE_URI'])
+#         return datadb
+# db = DBURL.database_url()
 # db.create_tables()
 
-# db = Database('postgres://postgres:psql@localhost:5432/store')
+db = Database(app.config['DATABASE_URI'])
 # db.create_tables()
-# app.config(['DATABASE_URL'])
+# db = Database(app.config(['DATABASE_URI']))
 # 'postgres://postgres@localhost/store'

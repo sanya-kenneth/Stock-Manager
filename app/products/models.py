@@ -13,7 +13,7 @@ class Product(Database):
     :params  product_name,product_quantity,product_price,product_description:
     """
     def __init__(self,product_name,product_quantity,product_price,product_description):
-        Database.__init__(self,app.config['DATABASE_URI'])
+        # Database.__init__(self,app.config['DATABASE_URI'])
         self.product_name = product_name
         self.product_quantity = product_quantity
         self.product_price = product_price
