@@ -15,7 +15,8 @@ services:
   - postgresql
 
 before_script:
-  - psql -c 'CREATE DATABASE test_store;' -U postgres
+  - psql -c 'CREATE DATABASE test_store;' -U postgres 
+  - psql -c "INSERT INTO user_table(username, useremail, userpassword,adminstatus) VALUES ('ben','ben@gmail.com','ben',TRUE)"
 
 #Command to run tests
 script:
