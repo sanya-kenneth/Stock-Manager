@@ -10,6 +10,7 @@ from app.auth.views import protected_route
 # create sales blueprint
 # blueprint will handle all sales routes for the app and routes for sale records
 sale_bp = Blueprint('sale_bp',__name__)
+sales_list = []
 
 
 @sale_bp.route('/sales', methods=['POST'])
@@ -76,7 +77,6 @@ def get_sales(current_user):
     if check_admin(current_user) == True:
         return jsonify({'error':'Access Denied. Please login as admin'}),401
     keys = ['Sale_Id','Attendant_Id','Attendant_name','Product_Id','Product_name','Product_quantity','Total','Date_of_sale']
-    sales_list = []
     sales = db.select_sales()
     if len(sales) == 0:
         return jsonify({'message':'No sales made yet'}), 404

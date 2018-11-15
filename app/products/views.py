@@ -11,6 +11,8 @@ import re
 #blueprint will handle all product routes for the app
 product = Blueprint('product',__name__)
 
+products_list = []
+
 
 @product.route('/products', methods=['POST'])
 @protected_route
@@ -63,7 +65,6 @@ def get_products(current_user):
     if len(products) == 0:
         return jsonify({'message':'There no products at the moment'}),404
     keys = ['Product_id','Product_name','Product_quantity','Product_price','Product_description','Date_added']
-    products_list = []
     for product in products:
         products_list.append(dict(zip(keys,product)))
     return jsonify({'Products':products_list}),200
@@ -79,7 +80,7 @@ def get_product(current_user,productid):
     db = Database(app.config['DATABASE_URI'])
     store_products = db.select_products() 
     if len(store_products) == 0:
-        return jsonify({'error':'There no products at the moment'}),404
+        return jsonify({'message':'There no products at the moment'}),404
     product_fetched = db.select_a_product(productid)
     if product_fetched == None:
         return jsonify({'message':'Product was not found'}),404
