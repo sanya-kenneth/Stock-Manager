@@ -11,6 +11,12 @@ install:
   - pip install coveralls
   - pip install codecov
 
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'CREATE DATABASE test_store;' -U postgres
+
 #Command to run tests
 script:
   - nosetests --with-coverage --cover-tests
