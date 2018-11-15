@@ -113,4 +113,7 @@ class Database():
     def remove_user(self,name):
         sql = ("""DELETE FROM user_table WHERE username = '{}' """.format(name))
         self.cursor.execute(sql)
-        
+
+    def add_user(self,username,useremail,userpassword,adminstatus):
+        sql = ("""INSERT INTO user_table(username, useremail, userpassword,adminstatus) VALUES ('{}','{}','{}','{}')""".format(username,useremail,userpassword,adminstatus))
+        self.cursor.execute(sql)

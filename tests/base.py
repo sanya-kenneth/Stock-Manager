@@ -5,6 +5,7 @@ from app.products.models import Product
 from app.sales.models import Sale
 from  app import create_app
 import datetime
+from werkzeug.security import generate_password_hash
 import json
 
 
@@ -21,6 +22,8 @@ class BaseTest(unittest.TestCase):
         self.db = Database(self.app.config['DATABASE_URI'])
         self.db.create_tables()
         self.app = self.app.test_client()
+        self.db.add_user('ben','ben@gmail.com',generate_password_hash('ben'),True)
+        self.db.add_user('sanya','sanya@gmail.com',generate_password_hash('sanya'),False)
         # self.app.config['SECRET']
         # self.app.config['DATABASE_URI'] = 'postgres://postgres:psql@localhost:5432/test_store'
         # self.user = User('ken','sanyakenneth@gmail.com','123')
@@ -31,6 +34,8 @@ class BaseTest(unittest.TestCase):
     def tearDown(self):
        self.db.drop_tables()
        self.db.remove_user('glen')
+       self.db.remove_user('ben')
+       self.db.remove_user('sanya')
 
     def get_token_admin(self):
         user = {  
@@ -50,6 +55,7 @@ class BaseTest(unittest.TestCase):
         data = json.loads(res.data.decode())
         # print(data['message'])
         return data['token']
+
 
    
 
