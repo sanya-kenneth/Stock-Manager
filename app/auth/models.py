@@ -9,7 +9,7 @@ from app.auth.database import Database
 #Store attendant class model
 class User(Database):
     def __init__(self,username,email,password,admin_status=False):
-        # Database.__init__(self,'postgres://postgres:psql@localhost:5432/store')
+        Database.__init__(self,app.config['DATABASE_URI'])
 
         """
         Class for creating the store attendant object

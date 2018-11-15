@@ -1,7 +1,7 @@
 from app import create_app
-from app.auth.database import Database
 
 
-app = create_app("Testing")
+
+app = create_app("Development")
 if __name__ == '__main__':
     app.run()

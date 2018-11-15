@@ -1,7 +1,7 @@
 from flask import Blueprint,request,jsonify,json
 from flask import current_app as app
 from app.auth.models import User
-from app.auth.database import db
+from app.auth.database import Database
 import jwt
 from werkzeug.security import check_password_hash,generate_password_hash
 from validate_email import validate_email
@@ -9,12 +9,13 @@ import re
 from functools import wraps
 import datetime
 from app.auth.utility import check_admin
+from app.auth import auths
 
 
 
 # Users and authentication blueprint
 # blueprint will handle all app user routes
-auths = Blueprint('auths',__name__)
+
 
 
 def protected_route(f):
@@ -28,6 +29,8 @@ def protected_route(f):
         try:
             data = jwt.decode(token,app.config['SECRET'])  
             print(app.config['SECRET'])
+            db = Database(app.config['DATABASE_URI'])
+            print(app.config['DATABASE_URI'])
             data_fetch = db.select_users()
             for user_info in data_fetch:
                 if user_info[2] == data['user']:
@@ -66,6 +69,7 @@ def create_store_attendant(current_user):
     if validate_email(user_email) == False:
         return jsonify({'error':'Invalid email'}),400
     usr_password = generate_password_hash(user_password, method='sha256')
+    db = Database(app.config['DATABASE_URI'])
     user = User(user_name,user_email,usr_password)
     users = db.select_users()
     for fetch_user in users:
@@ -96,6 +100,7 @@ def login():
             return jsonify({'error':'useremail must be a string'}),400
         if validate_email(user_email) == False:
             return jsonify({'error':'Invalid email'}),400
+        db = Database(app.config['DATABASE_URI'])
         user_data = db.select_users()
         for user in user_data:
             if user[2] == user_email and check_password_hash(user[3],user_password):

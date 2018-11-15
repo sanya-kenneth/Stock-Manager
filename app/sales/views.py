@@ -2,7 +2,7 @@ from flask import Blueprint,request,jsonify,json
 from flask import current_app as app
 import datetime
 from .models import Sale
-from app.auth.database import db
+from app.auth.database import Database
 from app.auth.utility import check_admin
 from app.auth.views import protected_route
 
@@ -26,6 +26,7 @@ def create_sale_order(current_user):
     data = json.loads(data)
     product_id = data['product_id']
     product_quantity = data['product_quantity']
+    db = Database(app.config['DATABASE_URI'])
     if check_admin(current_user) != True:
         return jsonify({'error':'Access Denied. Please login as a store attendant'}),401
     #check if content type is application/json
@@ -71,6 +72,7 @@ def get_sales(current_user):
 
     :params current_user:
     """
+    db = Database(app.config['DATABASE_URI'])
     if check_admin(current_user) == True:
         return jsonify({'error':'Access Denied. Please login as admin'}),401
     keys = ['Sale_Id','Attendant_Id','Attendant_name','Product_Id','Product_name','Product_quantity','Total','Date_of_sale']
@@ -90,7 +92,10 @@ def get_sale(current_user,sale_id):
     Function retrieves a sale given the input sale_id matches with
     a sale id of one of the sale records in the database
     """  
+    db = Database(app.config['DATABASE_URI'])
     sale_record = db.select_sale(sale_id)
+    if sale_record == None:
+        return jsonify({'message':'Sale record doesnot exist'}),404
     # sales = []
     returned_sale = {'Sale_Id':sale_record[0],
              'Attendant_Id':sale_record[1],
@@ -101,7 +106,5 @@ def get_sale(current_user,sale_id):
              'Total':sale_record[6],
              'Date_of_sale':sale_record[7]
             }
-    if sale_record == None:
-        return jsonify({'message':'Sale record doesnot exist'}),404
     return jsonify({'Sale-record':returned_sale}),200
     

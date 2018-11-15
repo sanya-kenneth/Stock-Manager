@@ -19,7 +19,6 @@ class BaseTest(unittest.TestCase):
         self.app_context = self.app.app_context()
         self.app_context.push()
         self.db = Database(self.app.config['DATABASE_URI'])
-        # print(self.db.__init__)
         self.db.create_tables()
         self.app = self.app.test_client()
         # self.app.config['SECRET']
@@ -28,10 +27,15 @@ class BaseTest(unittest.TestCase):
         # self.product = Product('soap',2,3000,'white star')
         # self.sale = Sale('1215','Len','soap',3,4000,12000,datetime.datetime.utcnow())
 
+    
+    def tearDown(self):
+       self.db.drop_tables()
+       self.db.remove_user('glen')
+
     def get_token_admin(self):
         user = {  
-                "email":"sanya@gmail.com",
-                "password":"sanya"
+                "email":"ben@gmail.com",
+                "password":"ben"
                 }
         res = self.app.post('/api/v1/users/login',data=json.dumps(user))
         data = json.loads(res.data.decode())
@@ -39,17 +43,18 @@ class BaseTest(unittest.TestCase):
 
     def get_token_user(self):
         user = {  
-                "email":"ken@gmail.com",
-                "password":"ken"
+                "email":"sanya@gmail.com",
+                "password":"sanya"
                 }
         res = self.app.post('/api/v1/users/login',data=json.dumps(user))
         data = json.loads(res.data.decode())
+        # print(data['message'])
         return data['token']
 
+   
 
 
-    def tearDown(self):
-       pass
+
 
 
     
@@ -58,6 +63,3 @@ class BaseTest(unittest.TestCase):
     
 if __name__ == '__main__':
     unittest.main()
-
-   
-
