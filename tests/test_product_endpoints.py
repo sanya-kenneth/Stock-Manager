@@ -185,4 +185,16 @@ class ProductTestCase(BaseTest):
         self.assertEqual(res.status_code, 404)
         self.assertIn('Product not found', str(res.data))
 
+    def test_returns_error_if_method_is_wrong(self):
+        self.app.post('/api/v1/products', content_type="application/json", data=json.dumps(dict(product_name = 'soap',
+                                                                                                        product_quantity= 10,
+                                                                                                        product_price = 2000,
+                                                                                                        product_description = 'good soap')),headers = {'token':self.get_token_admin()})
+        
+        res = self.app.post('/api/v1/products/1',headers = {'token':self.get_token_admin()})
+        self.assertEqual(res.status_code, 405)
+        self.assertIn(' :( Oops Method Not Allowed', str(res.data))
+
+
+
 

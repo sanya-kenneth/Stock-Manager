@@ -1,12 +1,8 @@
 from flask import Flask
 from app.products.views import product
-from app.products import views
-from app.auth import views
-from app.sales import views
 from app.auth import auths
 from app.sales.views import sale_bp
 from instance.config import app_config
-from app.auth.database import Database
 
 
 def create_app(config_name):
