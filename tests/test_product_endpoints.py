@@ -47,7 +47,7 @@ class ProductTestCase(BaseTest):
                                                                                                         product_description = '')), headers = {'token':self.get_token_admin()})
         self.assertEqual(res.status_code,400) 
 
-    def test_product_name_has_white_space(self): 
+    def test_product_name_has_white_space(self):        
         res = self.app.post('/api/v1/products', content_type="application/json", data=json.dumps(dict(product_name = 'soa p',
                                                                                                         product_quantity= 2,
                                                                                                         product_price = 2000,
@@ -110,6 +110,7 @@ class ProductTestCase(BaseTest):
         self.assertTrue(dataset['status'], 'Product created')
         self.assertEqual(res.status_code,201) 
 
+
     def test_returns_error_if_there_are_no_products(self):
         res = self.app.get('/api/v1/products', headers = {'token':self.get_token_admin()})
         dataset = json.loads(res.data.decode())
@@ -123,6 +124,7 @@ class ProductTestCase(BaseTest):
                                                                                                         product_price = 2000,
                                                                                                         product_description = 'good soap')),headers = {'token':self.get_token_admin()})
                                                                           
+
 
         res = self.app.get('/api/v1/products', headers = {'token':self.get_token_admin()})
         dataset = json.loads(res.data.decode())
@@ -185,4 +187,12 @@ class ProductTestCase(BaseTest):
         self.assertEqual(res.status_code, 404)
         self.assertIn('Product not found', str(res.data))
 
-
+    def test_returns_error_if_method_is_wrong(self):
+        self.app.post('/api/v1/products', content_type="application/json", data=json.dumps(dict(product_name = 'soap',
+                                                                                                        product_quantity= 10,
+                                                                                                        product_price = 2000,
+                                                                                                        product_description = 'good soap')),headers = {'token':self.get_token_admin()})
+        
+        res = self.app.post('/api/v1/products/1',headers = {'token':self.get_token_admin()})
+        self.assertEqual(res.status_code, 405)
+        self.assertIn(' :( Oops Method Not Allowed', str(res.data))
