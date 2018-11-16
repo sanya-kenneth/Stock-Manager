@@ -196,3 +196,7 @@ class ProductTestCase(BaseTest):
         res = self.app.post('/api/v1/products/1',headers = {'token':self.get_token_admin()})
         self.assertEqual(res.status_code, 405)
         self.assertIn(' :( Oops Method Not Allowed', str(res.data))
+
+
+
+
