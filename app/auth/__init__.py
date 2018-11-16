@@ -1,7 +1,5 @@
-# import sys
-# import os.path
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from flask import Blueprint
-# auths = Blueprint('auths',__name__)
 
+# Users and authentication blueprint
+# blueprint will handle all app user routes
 auths = Blueprint('auths',__name__)

@@ -1,5 +1,6 @@
 from urllib.parse import urlparse
 import psycopg2
+from flask import current_app as app
 
 
 class Database():
@@ -17,7 +18,7 @@ class Database():
         self.con = psycopg2.connect(database=db,user=username,password=password,host=hostname, port=port)
         self.con.autocommit = True
         self.cursor = self.con.cursor()
-        print("you are connected to the database")
+        # print("you are connected to the database")
 
     def create_tables(self):
 
@@ -117,3 +118,7 @@ class Database():
     def add_user(self,username,useremail,userpassword,adminstatus):
         sql = ("""INSERT INTO user_table(username, useremail, userpassword,adminstatus) VALUES ('{}','{}','{}','{}')""".format(username,useremail,userpassword,adminstatus))
         self.cursor.execute(sql)
+
+def db_handler():
+    obj = Database(app.config['DATABASE_URI'])
+    return obj

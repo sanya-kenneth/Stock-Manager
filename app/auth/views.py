@@ -1,7 +1,7 @@
 from flask import Blueprint,request,jsonify,json
 from flask import current_app as app
 from app.auth.models import User
-from app.auth.database import Database
+from app.auth.database import db_handler
 import jwt
 from werkzeug.security import check_password_hash,generate_password_hash
 from validate_email import validate_email
@@ -10,11 +10,6 @@ from functools import wraps
 import datetime
 from app.auth.utility import check_admin
 from app.auth import auths
-
-
-
-# Users and authentication blueprint
-# blueprint will handle all app user routes
 
 
 
@@ -27,9 +22,8 @@ def protected_route(f):
         if not token:
             return jsonify({'message':'Token is missing'}),401
         try:
-            data = jwt.decode(token,app.config['SECRET'])  
-            db = Database(app.config['DATABASE_URI'])
-            data_fetch = db.select_users()
+            data = jwt.decode(token,app.config['SECRET'], algorithms=['HS256'])  
+            data_fetch = db_handler().select_users()
             for user_info in data_fetch:
                 if user_info[2] == data['user']:
                     current_user = user_info         
@@ -53,8 +47,8 @@ def create_store_attendant(current_user):
     user_name = data['user_name']
     user_email = data['user_email']
     user_password = str(data['user_password'])
-    # if check_admin(current_user) == True:
-    #     return jsonify({'error':'Access Denied. Please login as admin'}),401
+    if check_admin(current_user) == True:
+        return jsonify({'error':'Access Denied. Please login as admin'}),401
     #check if content type is application/json
     if not request.content_type == 'application/json': 
         return jsonify({'error':'Wrong content-type'}),400
@@ -67,9 +61,8 @@ def create_store_attendant(current_user):
     if validate_email(user_email) == False:
         return jsonify({'error':'Invalid email'}),400
     usr_password = generate_password_hash(user_password, method='sha256')
-    db = Database(app.config['DATABASE_URI'])
     user = User(user_name,user_email,usr_password)
-    users = db.select_users()
+    users = db_handler().select_users()
     for fetch_user in users:
         if fetch_user[1] == user_name or fetch_user[2] == user_email:
             return jsonify({'error':'user already exists'}),400
@@ -98,11 +91,10 @@ def login():
         return jsonify({'error':'useremail must be a string'}),400
     if validate_email(user_email) == False:
         return jsonify({'error':'Invalid email'}),400
-    db = Database(app.config['DATABASE_URI'])
-    user_data = db.select_users()
+    user_data = db_handler().select_users()
     for user in user_data:
         if user[2] == user_email and check_password_hash(user[3],user_password):
-            token = jwt.encode({'user':user_email,'exp':datetime.datetime.utcnow()+datetime.timedelta(hours=24)},app.config['SECRET'])
+            token = jwt.encode({'user':user_email,'exp':datetime.datetime.utcnow()+datetime.timedelta(hours=24)},app.config['SECRET'], algorithm='HS256')
             return jsonify({'message':'You are now loggedin','token':token.decode('UTF-8')}),200
     return jsonify({'error':'Wrong useremail or password'}),400
     # except Exception:

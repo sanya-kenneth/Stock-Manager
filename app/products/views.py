@@ -1,15 +1,11 @@
-from flask import Blueprint,request,jsonify,json,make_response
-from flask import current_app as app
+from flask import request,jsonify,json,make_response
 from .models import Product
-from app.auth.database import Database
+from app.auth.database import db_handler
 from app.auth.views import protected_route
 from app.auth.views import check_admin
+from app.products import product
 import re
 
-
-#create product blueprint
-#blueprint will handle all product routes for the app
-product = Blueprint('product',__name__)
 
 products_list = []
 
@@ -41,8 +37,7 @@ def create_product(current_user):
             return jsonify({'error':'price or quantity must be a number and must be greater than 1'}),400
         if re.search(r'[\s]',product_name) != None:
             return jsonify({'error':'poductname cannot contain spaces'}),400
-        db = Database(app.config['DATABASE_URI'])
-        products = db.select_products()
+        products = db_handler().select_products()
         for product in products:
             if product_name == product[1] and product_description == product[4]:
                 return jsonify({'error':'Product already exists'}),400
@@ -60,8 +55,7 @@ def get_products(current_user):
     Function returns products from the database
     If the database is empty, function will return a customised error
     """
-    db = Database(app.config['DATABASE_URI'])
-    products = db.select_products()
+    products = db_handler().select_products()
     if len(products) == 0:
         return jsonify({'message':'There no products at the moment'}),404
     keys = ['Product_id','Product_name','Product_quantity','Product_price','Product_description','Date_added']
@@ -77,11 +71,10 @@ def get_product(current_user,productid):
     Function returns a specific product filtered by a product id
     :params product_id:
     """
-    db = Database(app.config['DATABASE_URI'])
-    store_products = db.select_products() 
+    store_products = db_handler().select_products() 
     if len(store_products) == 0:
         return jsonify({'message':'There no products at the moment'}),404
-    product_fetched = db.select_a_product(productid)
+    product_fetched = db_handler().select_a_product(productid)
     if product_fetched == None:
         return jsonify({'message':'Product was not found'}),404
     product = {
@@ -118,13 +111,12 @@ def update_product(current_user,productid):
         return jsonify({'error':'poductname cannot contain spaces'}),400
     if not isinstance(prodt_price,int) or not isinstance(prodt_quantity,int) or prodt_price < 1 or prodt_quantity < 1:
         return jsonify({'error':'price or quantity must be a number and must be greater than 1'}),400
-    db = Database(app.config['DATABASE_URI'])
-    product_to_update = db.select_a_product(productid)
+    product_to_update = db_handler().select_a_product(productid)
     if product_to_update == None:
         return jsonify({'message':'Product not found'}),404
     if product_to_update[0] == int(productid):
-        db.update_product(productid,prodt_name,prodt_quantity,prodt_price,prodt_desc)
-        product_updated = db.select_a_product(productid)
+        db_handler().update_product(productid,prodt_name,prodt_quantity,prodt_price,prodt_desc)
+        product_updated = db_handler().select_a_product(productid)
         product = {
                     'Product_id':product_updated[0],
                     'Product_name':product_updated[1],
@@ -139,13 +131,12 @@ def update_product(current_user,productid):
 @product.route('/products/<productid>', methods=['DELETE'])
 @protected_route
 def delete_product(current_user,productid):
-    db = Database(app.config['DATABASE_URI'])
     if check_admin(current_user) is True:
         return jsonify({'error':'Access Denied. Please login as admin'}),401
-    selected_product = db.select_a_product(productid)
+    selected_product = db_handler().select_a_product(productid)
     if selected_product == None:
         return jsonify({'message':'Product not found'}),404
-    db.delete_product(productid)
+    db_handler().delete_product(productid)
     return jsonify({'message':'Product was deleted successfuly'}),200
     
     

@@ -1,3 +1,6 @@
-# import sys
-# import os.path
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+from flask import Blueprint
+
+
+# create sales blueprint
+# blueprint will handle all sales routes for the app and routes for sale records
+sale_bp = Blueprint('sale_bp',__name__)

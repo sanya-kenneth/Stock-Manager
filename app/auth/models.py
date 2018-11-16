@@ -1,16 +1,11 @@
-# from app.auth.database import Database
 from flask import current_app as app
-# from auth.database import Database
-# from app.auth.database import Database
-from app.auth.database import Database
+from app.auth.database import db_handler
 
 
 
 #Store attendant class model
-class User(Database):
+class User:
     def __init__(self,username,email,password,admin_status=False):
-        Database.__init__(self,app.config['DATABASE_URI'])
-
         """
         Class for creating the store attendant object
 
@@ -24,14 +19,5 @@ class User(Database):
     def insert_user(self):
         sql = ("""INSERT INTO user_table(username, useremail, userpassword,adminstatus) VALUES ('{}','{}','{}','{}')""" \
         .format(self.username, self.email, self.password, self.admin_status))
-        self.cursor.execute(sql)
+        db_handler().cursor.execute(sql)
         return True
-
-   
-
-
-# me = User('sanya','ken',123)
-# print(me)
-# me.create_tables()
-# me.insert_user()
-# print(me.select_users())

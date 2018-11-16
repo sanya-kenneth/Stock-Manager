@@ -1,15 +1,12 @@
-from flask import Blueprint,request,jsonify,json
-from flask import current_app as app
+from flask import request,jsonify,json
 import datetime
 from .models import Sale
-from app.auth.database import Database
+from app.auth.database import db_handler
 from app.auth.utility import check_admin
 from app.auth.views import protected_route
+from app.sales import sale_bp
 
 
-# create sales blueprint
-# blueprint will handle all sales routes for the app and routes for sale records
-sale_bp = Blueprint('sale_bp',__name__)
 sales_list = []
 
 
@@ -27,7 +24,6 @@ def create_sale_order(current_user):
     data = json.loads(data)
     product_id = data['product_id']
     product_quantity = data['product_quantity']
-    db = Database(app.config['DATABASE_URI'])
     if check_admin(current_user) != True:
         return jsonify({'error':'Access Denied. Please login as a store attendant'}),401
     #check if content type is application/json
@@ -37,8 +33,8 @@ def create_sale_order(current_user):
         return jsonify({'error':'Product quantity cannot be less than 1'}),400
     if not product_id or not isinstance(product_id,int) or not product_quantity or not isinstance(product_quantity,int):
         return jsonify({'error':'Product quantity or id cannot be empty and must be a number'}),400
-    product_selected = db.select_a_product(product_id)
-    products = db.select_products()
+    product_selected = db_handler().select_a_product(product_id)
+    products = db_handler().select_products()
     if product_selected == None:
         return jsonify({'message':'Product not found'}),404
     if len(products) == 0:
@@ -59,7 +55,7 @@ def create_sale_order(current_user):
             'Total':sale_record.Total,
             'Sale_date':sale_record.sale_date 
                 }
-    db.update_quantity(product_id,new_quantity)
+    db_handler().update_quantity(product_id,new_quantity)
     return jsonify({'Sale_record':sale_display,'message':'Sale was successfully made'}),201        
     # except Exception:
     #     return jsonify({'error':'Required field/s missing'}),400
@@ -73,11 +69,10 @@ def get_sales(current_user):
 
     :params current_user:
     """
-    db = Database(app.config['DATABASE_URI'])
     if check_admin(current_user) == True:
         return jsonify({'error':'Access Denied. Please login as admin'}),401
     keys = ['Sale_Id','Attendant_Id','Attendant_name','Product_Id','Product_name','Product_quantity','Total','Date_of_sale']
-    sales = db.select_sales()
+    sales = db_handler().select_sales()
     if len(sales) == 0:
         return jsonify({'message':'No sales made yet'}), 404
     for sale in sales:
@@ -92,11 +87,9 @@ def get_sale(current_user,sale_id):
     Function retrieves a sale given the input sale_id matches with
     a sale id of one of the sale records in the database
     """  
-    db = Database(app.config['DATABASE_URI'])
-    sale_record = db.select_sale(sale_id)
+    sale_record = db_handler().select_sale(sale_id)
     if sale_record == None:
         return jsonify({'message':'Sale record doesnot exist'}),404
-    # sales = []
     returned_sale = {'Sale_Id':sale_record[0],
              'Attendant_Id':sale_record[1],
              'Attendant_name':sale_record[2],
