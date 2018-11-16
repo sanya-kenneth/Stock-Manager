@@ -18,7 +18,6 @@ class Database():
         self.con = psycopg2.connect(database=db,user=username,password=password,host=hostname, port=port)
         self.con.autocommit = True
         self.cursor = self.con.cursor()
-        # print("you are connected to the database")
 
     def create_tables(self):
 
