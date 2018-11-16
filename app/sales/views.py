@@ -19,7 +19,6 @@ def create_sale_order(current_user):
 
     :params current_user:
     """
-    # try:
     data = request.data
     data = json.loads(data)
     product_id = data['product_id']
@@ -57,8 +56,6 @@ def create_sale_order(current_user):
                 }
     db_handler().update_quantity(product_id,new_quantity)
     return jsonify({'Sale_record':sale_display,'message':'Sale was successfully made'}),201        
-    # except Exception:
-    #     return jsonify({'error':'Required field/s missing'}),400
     
         
 @sale_bp.route('/sales', methods=['GET'])

@@ -5,22 +5,20 @@ class BaseConfig:
     DEBUG = False
     TESTING = False
     DATABASE_URI = 'postgres://postgres:psql@localhost:5432/store'
-    SECRET = 'kkkkkkkkk'
+    SECRET = 'shdsjhdjsdjbcnxcxhusdsjkdjskdjsdjksjdsjbcbjxcjhsjdsjdhsjhdsjhdjshd'
 
 class DevelopmentConfig(BaseConfig):
     """Development configuraion. Loads development configuration data when the app is in the development environment"""
     DEBUG = True
     TESTING = False
     DATABASE_URI = 'postgres://postgres:psql@localhost:5432/store'
-    ENV = 'Development'
-    # os.environ['APP_SETTINGS'] = 'Development'
+
 class TestingConfig(BaseConfig):
     """Testing configuraion. Loads Test configuration data when the app is in the Test environment"""
     DEBUG = True
     TESTING = True
     DATABASE_URI = 'postgres://postgres:psql@localhost:5432/test_store'
     ENV = 'Testing'
-    # os.environ['APP_SETTINGS'] = 'Testing'
 
 class ProductionConfig(BaseConfig):
     """Production configuraion. Loads Production configuration data when the app is in the Production environment"""

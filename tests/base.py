@@ -9,7 +9,6 @@ from werkzeug.security import generate_password_hash
 import json
 
 
-
 class BaseTest(unittest.TestCase):
     def setUp(self):
         """
@@ -24,13 +23,7 @@ class BaseTest(unittest.TestCase):
         self.app = self.app.test_client()
         self.db.add_user('ben','ben@gmail.com',generate_password_hash('ben'),True)
         self.db.add_user('sanya','sanya@gmail.com',generate_password_hash('sanya'),False)
-        # self.app.config['SECRET']
-        # self.app.config['DATABASE_URI'] = 'postgres://postgres:psql@localhost:5432/test_store'
-        # self.user = User('ken','sanyakenneth@gmail.com','123')
-        # self.product = Product('soap',2,3000,'white star')
-        # self.sale = Sale('1215','Len','soap',3,4000,12000,datetime.datetime.utcnow())
-
-    
+      
     def tearDown(self):
        self.db.drop_tables()
        self.db.remove_user('glen')
@@ -53,17 +46,7 @@ class BaseTest(unittest.TestCase):
                 }
         res = self.app.post('/api/v1/users/login',data=json.dumps(user))
         data = json.loads(res.data.decode())
-        # print(data['message'])
         return data['token']
-
-
-   
-
-
-
-
-
-    
 
     
     

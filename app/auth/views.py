@@ -41,7 +41,6 @@ def create_store_attendant(current_user):
     If data input is not valid function will return a customise error message
 
     """
-    # try:
     data = request.data
     data = json.loads(data)
     user_name = data['user_name']
@@ -67,10 +66,7 @@ def create_store_attendant(current_user):
         if fetch_user[1] == user_name or fetch_user[2] == user_email:
             return jsonify({'error':'user already exists'}),400
     user.insert_user()
-    return jsonify({'message':'Store attendant was successfully registered'}),201
-    # except Exception:
-    #     return jsonify({'error':'Required field/s missing'}),400
-    
+    return jsonify({'message':'Store attendant was successfully registered'}),201  
                    
             
 #Login route for store attendant and admin
@@ -80,7 +76,6 @@ def login():
     Function to login a store attendant into the system
     if the store attendant account doesnot exist, an error is returned
     """
-    # try:
     user_info = request.data
     login_info = json.loads(user_info)
     user_email = login_info['email']
@@ -97,5 +92,3 @@ def login():
             token = jwt.encode({'user':user_email,'exp':datetime.datetime.utcnow()+datetime.timedelta(hours=24)},app.config['SECRET'], algorithm='HS256')
             return jsonify({'message':'You are now loggedin','token':token.decode('UTF-8')}),200
     return jsonify({'error':'Wrong useremail or password'}),400
-    # except Exception:
-    #     return jsonify({'error':'Required field/s missing'}),400

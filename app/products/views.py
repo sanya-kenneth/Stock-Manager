@@ -19,33 +19,31 @@ def create_product(current_user):
 
     :params current_user:
     """
-    try:
-        data = request.data
-        data = json.loads(data)
-        product_name = data['product_name']
-        product_quantity = data['product_quantity']
-        product_price = data['product_price']
-        product_description = data['product_description']
-        if check_admin(current_user) is True:
-            return jsonify({'error':'Access Denied. Please login as admin'}),401
-        #check if content type is application/json
-        if not request.content_type == 'application/json': 
-            return jsonify({'error':'Wrong content-type'}),400
-        if not product_name or not product_quantity or not product_price or product_description == "":
-            return jsonify({'error':'One of the required fields is empty'}),400
-        if not isinstance(product_price,int) or not isinstance(product_quantity,int) or product_price < 1 or product_quantity < 1:
-            return jsonify({'error':'price or quantity must be a number and must be greater than 1'}),400
-        if re.search(r'[\s]',product_name) != None:
-            return jsonify({'error':'poductname cannot contain spaces'}),400
-        products = db_handler().select_products()
-        for product in products:
-            if product_name == product[1] and product_description == product[4]:
-                return jsonify({'error':'Product already exists'}),400
-        product = Product(product_name,product_quantity,product_price,product_description)
-        product.add_product()
-        return jsonify({'status':'Product created'}),201
-    except Exception:
-        return jsonify({'error':'Required field/s missing'}),400
+    data = request.data
+    data = json.loads(data)
+    product_name = data['product_name']
+    product_quantity = data['product_quantity']
+    product_price = data['product_price']
+    product_description = data['product_description']
+    if check_admin(current_user) is True:
+        return jsonify({'error':'Access Denied. Please login as admin'}),401
+    #check if content type is application/json
+    if not request.content_type == 'application/json': 
+        return jsonify({'error':'Wrong content-type'}),400
+    if not product_name or not product_quantity or not product_price or product_description == "":
+        return jsonify({'error':'One of the required fields is empty'}),400
+    if not isinstance(product_price,int) or not isinstance(product_quantity,int) or product_price < 1 or product_quantity < 1:
+        return jsonify({'error':'price or quantity must be a number and must be greater than 1'}),400
+    if re.search(r'[\s]',product_name) != None:
+        return jsonify({'error':'poductname cannot contain spaces'}),400
+    products = db_handler().select_products()
+    for product in products:
+        if product_name == product[1] and product_description == product[4]:
+            return jsonify({'error':'Product already exists'}),400
+    product = Product(product_name,product_quantity,product_price,product_description)
+    product.add_product()
+    return jsonify({'status':'Product created'}),201
+    
     
 
 @product.route('/products', methods=['GET'])
@@ -94,7 +92,6 @@ def update_product(current_user,productid):
     Function updates a product if the provided productid is correct
     :params productid:
     """
-    # try:
     data = request.data
     data = json.loads(data)
     prodt_name = data['productname']
@@ -125,8 +122,7 @@ def update_product(current_user,productid):
                     'Product_description':product_updated[4]
                     }
         return jsonify({'Product':product,'message':'Product successfully updated'}),201
-    # except Exception:
-    #     return jsonify({'error':'Required field/s missing'}),400
+
 
 @product.route('/products/<productid>', methods=['DELETE'])
 @protected_route
@@ -140,7 +136,6 @@ def delete_product(current_user,productid):
     return jsonify({'message':'Product was deleted successfuly'}),200
     
     
-
 #custom error handler
 @product.app_errorhandler(405)
 def not_found(error):
