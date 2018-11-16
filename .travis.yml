@@ -1,0 +1,27 @@
+language: python
+python:
+  - "3.6"
+
+#Command to install dependencies
+env:
+  global:
+    - CODECOV_TOKEN="8f3efc4a-4ba3-4f02-b1d6-e1a77c66ab48"
+install:
+  - pip install -r requirements.txt
+  - pip install coveralls
+  - pip install codecov
+
+services:
+  - postgresql
+
+before_script:
+  - psql -c 'CREATE DATABASE test_store;' -U postgres 
+
+#Command to run tests
+script:
+  - nosetests --with-coverage --cover-tests
+  - coverage report
+
+after_success:
+  - coveralls
+  - codecov

@@ -1,0 +1,11 @@
+/venv
+/app/__pycache__
+.vscode/
+/app/products/__pycache__
+/instance/__pycache__
+/app/auth/__pycache__
+/app/sales/__pycache__
+/tests/__pycache__
+.pytest_cache
+.coverage
+/__pycache__/
