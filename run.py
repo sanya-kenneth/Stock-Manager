@@ -1,9 +1,9 @@
 from app import create_app
-from app.auth.database import db_handler
-
+from app.auth.database import Database
 # App entry point
 app = create_app("Production")
-db_handler().create_tables()
+db = Database(app.config['DATABASE_URI'])
+db.create_tables()
   
 if __name__ == '__main__':
     app.run()
