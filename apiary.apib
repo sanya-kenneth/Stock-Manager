@@ -1,0 +1,531 @@
+FORMAT: 1A
+HOST: https://store-managerch3.herokuapp.com
+
+# store-manager
+
+Store Manager is a web application that helps store owners manage sales and product inventory records. This application is meant for use in a single store
+
+## Add store attendant [/api/v1/users]
+
+### Create a store attendant account [POST]
+
+You can create a store attendant account by sending a json request with a username, email and a password.
+The username must not contain any white space and the email must be a valid email.
+
++ Request (application/json)
+
+    + Headers
+
+            token:'user token'
+
+    + Body
+
+            {
+                "user_name":"user",
+                "user_email":"user@domain.com",
+                "user_password":"123456789"
+            }
+
++ Response 201 (application/json)
+
+        {
+            "message": "Store attendant was successfully registered"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "error":"Access Denied. Please login as admin"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Wrong content-type"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"username,email or password cannot be empty"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"username or email must be a string"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Username cannot contain spaces"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Invalid email"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"user already exists"
+        }
+
+## Login [/api/v1/users/login]
+
+### Login a store attendant or an admin [POST]
+
+You can login a store attendant or an admin by sending their email and password.
+email must be a valid email. Please take note of the generated token, you will need it to access all user requests.
+
++ Request (application/json)
+
+        {
+            "email":"user@domain.com",
+            "password":"123456789"
+        }
+
++ Response 201 (application/json)
+
+        {
+            "message": "You are now loggedin",
+            "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoic2FueWFAZ21haWwuY29tIiwiZXhwIjoxNTQyNTc3MTU5fQ.vAIM01CuxowPEie3sYGQN3aFDOPG65Dx7dOthsbxFIQ"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"useremail or password cannot be empty"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"useremail must be a string"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Invalid email"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Wrong useremail or password"
+        }
+
+## Product [/api/v1/products]
+
+### Add product [POST]
+
+You can add a product to the database. Pleae take note that the productname must not have
+any white space and the product price must be a number.
+Only admins are allowed to add a product.
+
+
++ Request (application/json)
+
+    + Headers
+
+            token:'user token'
+
+    + Body
+
+            {
+                "product_name": "name of product",
+                "product_description": "description of product",
+                "product_price": "price of product",
+                "product_quantity": "quantity of product"
+            }
+
++ Response 201 (application/json)
+
+        {
+            "satus":"Product created"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "error":"Access Denied. Please login as admin"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Wrong content-type"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"One of the required fields is empty"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"price or quantity must be a number and must be greater than 1"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"poductname cannot contain spaces"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Product already exists"
+        }
+
+### Get all products [GET]
+
+Fetch all products from the database. User must be loggedin to be able to perform this action.
+Both the admin and store attendant can fetch all products.
+
++ Request (application/json)
+
+    + Headers
+
+            token:'user  token'
+
++ Response 200 (application/json)
+
+        {
+            "Products": [
+                    {
+                        "Date_added": "2018-11-01 06:29:01.066591",
+                        "Product_description": "productdescription",
+                        "Product_id": "productid",
+                        "Product_name": "productname",
+                        "Product_price": productprice,
+                        "Product_quantity": "productquantity"
+                    },
+                    {
+                        "Date_added": "2018-11-15 18:15:51.391681",
+                        "Product_description": "productdescription",
+                        "Product_id": "productid",
+                        "Product_name": "productname",
+                        "Product_price": productprice,
+                        "Product_quantity": "productquantity"
+                    },
+                    {
+                        "Date_added": "2018-11-16 22:23:49.844596",
+                        "Product_description": "productdescription",
+                        "Product_id": "productid",
+                        "Product_name": "productname",
+                        "Product_price": "productprice",
+                        "Product_quantity": "productquantity"
+                    }
+                ]
+        }
+
++ Response 404 (application/json)
+
+        {
+            "message":"There no products at the moment"
+        }
+
+## Single product resources [/api/v1/products/{product_id}]
+
+### Get a product [GET]
+
+Get a product by a id.
+
++ Request (application/json)
+
+    + Headers
+
+            token:'user  token'
+
++ Response 200 (application/json)
+
+        {
+            "Product": {
+                "Date_added": "2018-11-01 06:29:01.066591",
+                "Product_description": "productdescription",
+                "Product_id": "productid",
+                "Product_name": "productname",
+                "Product_price": "productprice",
+                "Product_quantity": "productquantity"
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "message":"There no products at the moment"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "message":"Product was not found"
+        }
+
+### Update a product [PUT]
+
+Update a product. If input id matches with a product id in the database,
+the product is updated.
+
++ Request (application/json)
+
+    + Headers
+
+            token:'user token'
+
+    + Body
+
+            {
+                "product_name": "name of product",
+                "product_description": "description of product",
+                "product_price": "price of product",
+                "product_quantity": "quantity of product"
+            }
+
++ Response 201 (application/json)
+
+        {
+            "Product": {
+                "Product_description": "productdescription",
+                "Product_id": "productid",
+                "Product_name": "productname",
+                "Product_price": productprice,
+                "Product_quantity": productquantity
+            },
+            "message": "Product successfully updated"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "error":"Access Denied. Please login as admin"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Wrong content-type"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"required field cannot be empty"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"poductname cannot contain spaces"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"price or quantity must be a number and must be greater than 1"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "message":"Product not found"
+        }
+
+
+### Delete a product [DELETE]
+
+Delete a specific product by product id. 
+If the input id matches with a product id in the database, the product is deleted.
+
++ Request (application/json)
+
+    + Headers
+
+            token:'user  token'
+
++ Response 200 (application/json)
+
+        {
+            "message":"Product was deleted successfuly"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "error":"Access Denied. Please login as admin"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "message":"Product not found"
+        }
+
+## Sale [/api/v1/sales]
+
+### make sale [POST]
+
+Create a sale record. Please take note that only store attendants can perform this action.
+
++ Request (application/json)
+
+    + Headers
+
+            token:'user token'
+
+    + Body
+
+            {
+                "product_id":"productid",
+                "product_quantity":"productquantity"
+            }
+
++ Response 201 (application/json)
+
+        {
+            "Sale_record": {
+                "Attendant_Id": "attendantid",
+                "Attendant_name": "attendantname",
+                "Product_Id": "productid",
+                "Product_name": "productname",
+                "Product_quantity": "productquantity",
+                "Sale_date": "Sun, 18 Nov 2018 09:33:58 GMT",
+                "Total": "Total"
+            },
+            "message": "Sale was successfully made"
+        }
+
++ Response 401 (application/json)
+
+        {
+            "error":"Access Denied. Please login as a store attendant"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Wrong content-type"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Product quantity cannot be less than 1"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Product quantity or id cannot be empty and must be a number"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "message":"Product not found"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "message":"There no products in the system"
+        }
+
++ Response 400 (application/json)
+
+        {
+            "error":"Sorry product is out of stock or quantity selected is higher than quantity available"
+        }
+
+### get all sales [GET]
+
+Fetch all sales from the system. 
+Please take note that only an admin can perform this action.
+
++ Request (application/json)
+
+    + Headers
+
+            token:'user token'
+
++ Response 200 (application/json)
+
+        {
+            "Sales_records": [
+                {
+                    "Attendant_Id": "attendantid",
+                    "Attendant_name": "attendantname",
+                    "Date_of_sale": "2018-11-13 14:31:02.214786",
+                    "Product_Id": "productid",
+                    "Product_name": "productname",
+                    "Product_quantity": "productquantity",
+                    "Sale_Id": "sale-record-id",
+                    "Total": "Total"
+                },
+                {
+                    "Attendant_Id": "attendantid",
+                    "Attendant_name": "attendantname",
+                    "Date_of_sale": "2018-11-15 15:20:05.976441",
+                    "Product_Id": "productid",
+                    "Product_name": "productname",
+                    "Product_quantity": "productquantity",
+                    "Sale_Id": "sale-record-id",
+                    "Total": "Total"
+                }  
+                
+            ]
+        }
+
++ Response 401 (application/json)
+
+        {
+            "error":"Access Denied. Please login as admin"
+        }
+
++ Response 404 (application/json)
+
+        {
+            "message":"No sales made yet"
+        }
+
+## Single sale resources [/api/v1/sales/{sales_id}]
+
+### get a sale [GET]
+
+Retrieve a one sale record.
+
++ Request (application/json)
+
+    + Headers
+
+            token:'user token'
+
+
++ Response 200 (application/json)
+
+        {
+            "Sale-record": {
+                "Attendant_Id": "attendantid",
+                "Attendant_name": "attendantname",
+                "Date_of_sale": "2018-11-16 20:25:03.025381",
+                "Product_Id": "productid",
+                "Product_name": "productname",
+                "Product_quantity": "productquantity",
+                "Sale_Id": "sale-record-id",
+                "Total": "Total"
+            }
+        }
+
++ Response 404 (application/json)
+
+        {
+            "message":"Sale record doesnot exist"
+        }
