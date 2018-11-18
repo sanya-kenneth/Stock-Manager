@@ -20,7 +20,7 @@ Store Manager is a web application that helps store owners manage sales and prod
 
 ## Getting Started
 
-Clone the project from this [link](https://github.com/sanya-kenneth/Store-Manager/tree/ft-API)
+Clone the project from this [link](https://github.com/sanya-kenneth/Store-Manager/tree/develop)
 
 ## Prerequisites
 
@@ -52,7 +52,7 @@ $ python run.py
 
 > The API is hosted on Heroku. Use the link below to navigate to it.
 
-https://store-managerch2.herokuapp.com/
+https://store-managerch3.herokuapp.com/
 
 ## Testing the Api
 
@@ -75,9 +75,10 @@ Run the tests
 | `POST /api/v1/products` | Create a product |
 | `POST /api/v1/sales` | Create a sale order |
 | `POST /api/v1/users` | Create a store attendant account |
-| `POST /api/v1/users/admin` | Create admin account |
-| `POST /api/v1/users/login` | Login store attendant |
-| `POST /api/v1/users/login/admin` | Login admin |
+| `POST /api/v1/users/login` | Login store attendant or admin |
+| `PUT /api/v1/products/<product_id>` | Update a specific product |
+| `DELETE /api/v1/products/<product_id>` | Delete a specific product |
+
 ## Built With
 
  Python 3.6
@@ -88,6 +89,10 @@ Run the tests
 * Pylint
 * Pytest
 * Virtual environment
+
+## Documentation
+
+The API is documented. Find the documentation [here](https://storemanager21.docs.apiary.io/#)
 
 ## Authors
 
