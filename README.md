@@ -99,7 +99,3 @@ The API is documented. Find the documentation [here](https://storemanager21.docs
 Sanya Kenneth
 
 Email  : sanyakenneth@gmail.com
-
-## Acknowledgements
-
-Special thanks goes to Andela for making cohort 13 possible and above all, great thanks to God who makes everything possible.
